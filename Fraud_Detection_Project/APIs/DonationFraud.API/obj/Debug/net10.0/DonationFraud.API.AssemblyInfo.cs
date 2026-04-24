@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DonationFraud.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2049bc192cc87659594beddba29cd8ce141352c1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+899280fe90e7e0e749fc9635f93cc67e261a169b")]
 [assembly: System.Reflection.AssemblyProductAttribute("DonationFraud.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DonationFraud.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

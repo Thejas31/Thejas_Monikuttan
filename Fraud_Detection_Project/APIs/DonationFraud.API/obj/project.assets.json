@@ -4350,11 +4350,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\college work\\Training-H&R Block Courses\\Project_Fraud_Detection\\DonationFraud.API\\DonationFraud.API.csproj",
+      "projectUniqueName": "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\APIs\\DonationFraud.API\\DonationFraud.API.csproj",
       "projectName": "DonationFraud.API",
-      "projectPath": "D:\\college work\\Training-H&R Block Courses\\Project_Fraud_Detection\\DonationFraud.API\\DonationFraud.API.csproj",
+      "projectPath": "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\APIs\\DonationFraud.API\\DonationFraud.API.csproj",
       "packagesPath": "C:\\Users\\VICTUS\\.nuget\\packages\\",
-      "outputPath": "D:\\college work\\Training-H&R Block Courses\\Project_Fraud_Detection\\DonationFraud.API\\obj\\",
+      "outputPath": "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\APIs\\DonationFraud.API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
