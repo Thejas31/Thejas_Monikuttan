@@ -29,7 +29,7 @@ namespace DonationFraud.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [Authorize]
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
         {

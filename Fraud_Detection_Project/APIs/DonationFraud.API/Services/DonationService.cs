@@ -4,6 +4,7 @@ using DonationFraud.API.Interfaces;
 using DonationFraud.API.Models;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DonationFraud.API.Services
@@ -51,6 +52,20 @@ namespace DonationFraud.API.Services
             return new ProcessDonationResult { IsSuccess = true, DonationId = donation.Id };
         }
 
-        public async Task<IEnumerable<Donation>> GetUserDonationsAsync(int userId) => await _donationRepo.GetDonationsByUserIdAsync(userId);
+        public async Task<IEnumerable<DonationResponseDto>> GetUserDonationsAsync(int userId)
+        {
+            var donations = await _donationRepo.GetDonationsByUserIdAsync(userId);
+            return donations.Select(d => new DonationResponseDto
+            {
+                Id = d.Id,
+                Amount = d.Amount,
+                Timestamp = d.Timestamp,
+                CampaignId = d.CampaignId,
+                CampaignTitle = d.Campaign?.Title ?? string.Empty,
+                IsFlagged = d.FraudFlag != null,
+                FraudReason = d.FraudFlag?.Reason,
+                RiskLevel = d.FraudFlag?.RiskLevel.ToString()
+            });
+        }
     }
 }

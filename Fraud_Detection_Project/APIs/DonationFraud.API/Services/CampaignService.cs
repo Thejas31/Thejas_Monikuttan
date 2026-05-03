@@ -2,6 +2,7 @@ using DonationFraud.API.DTOs;
 using DonationFraud.API.Entities;
 using DonationFraud.API.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DonationFraud.API.Services
@@ -24,7 +25,27 @@ namespace DonationFraud.API.Services
             return campaign.Id;
         }
 
-        public async Task<IEnumerable<Campaign>> GetAllCampaignsAsync() => await _campaignRepo.GetAllCampaignsAsync();
-        public async Task<Campaign?> GetCampaignByIdAsync(int id) => await _campaignRepo.GetCampaignByIdAsync(id);
+        public async Task<IEnumerable<CampaignResponseDto>> GetAllCampaignsAsync()
+        {
+            var campaigns = await _campaignRepo.GetAllCampaignsAsync();
+            return campaigns.Select(MapToDto);
+        }
+
+        public async Task<CampaignResponseDto?> GetCampaignByIdAsync(int id)
+        {
+            var campaign = await _campaignRepo.GetCampaignByIdAsync(id);
+            return campaign == null ? null : MapToDto(campaign);
+        }
+
+        private static CampaignResponseDto MapToDto(Campaign c) => new()
+        {
+            Id = c.Id,
+            Title = c.Title,
+            Description = c.Description,
+            TargetAmount = c.TargetAmount,
+            CreatedAt = c.CreatedAt,
+            TotalDonations = c.Donations?.Count ?? 0,
+            TotalAmountRaised = c.Donations?.Sum(d => d.Amount) ?? 0
+        };
     }
 }

@@ -28,8 +28,8 @@ namespace DonationFraud.API.Repositories
         private readonly DonationDbContext _context;
         public CampaignRepository(DonationDbContext context) => _context = context;
 
-        public async Task<Campaign?> GetCampaignByIdAsync(int id) => await _context.Campaigns.FindAsync(id);
-        public async Task<IEnumerable<Campaign>> GetAllCampaignsAsync() => await _context.Campaigns.ToListAsync();
+        public async Task<Campaign?> GetCampaignByIdAsync(int id) => await _context.Campaigns.Include(c => c.Donations).FirstOrDefaultAsync(c => c.Id == id);
+        public async Task<IEnumerable<Campaign>> GetAllCampaignsAsync() => await _context.Campaigns.Include(c => c.Donations).ToListAsync();
         public async Task AddCampaignAsync(Campaign campaign) => await _context.Campaigns.AddAsync(campaign);
         public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
     }
@@ -40,7 +40,12 @@ namespace DonationFraud.API.Repositories
         public DonationRepository(DonationDbContext context) => _context = context;
 
         public async Task<Donation?> GetDonationByIdAsync(int id) => await _context.Donations.FindAsync(id);
-        public async Task<IEnumerable<Donation>> GetDonationsByUserIdAsync(int userId) => await _context.Donations.Where(d => d.UserId == userId).ToListAsync();
+        public async Task<IEnumerable<Donation>> GetDonationsByUserIdAsync(int userId) => await _context.Donations
+            .Include(d => d.Campaign)
+            .Include(d => d.FraudFlag)
+            .Where(d => d.UserId == userId)
+            .OrderByDescending(d => d.Timestamp)
+            .ToListAsync();
         public async Task<IEnumerable<Donation>> GetUserDonationsInTimespanAsync(int userId, TimeSpan timeSpan)
         {
             var cutoff = DateTime.UtcNow.Subtract(timeSpan);
@@ -56,8 +61,8 @@ namespace DonationFraud.API.Repositories
         public FraudFlagRepository(DonationDbContext context) => _context = context;
 
         public async Task<FraudFlag?> GetFraudFlagByIdAsync(int id) => await _context.FraudFlags.Include(f => f.Donation).ThenInclude(d => d.User).FirstOrDefaultAsync(f => f.Id == id);
-        public async Task<IEnumerable<FraudFlag>> GetAllFlagsAsync() => await _context.FraudFlags.Include(f => f.Donation).ToListAsync();
-        public async Task<IEnumerable<FraudFlag>> GetHighRiskFlagsAsync() => await _context.FraudFlags.Where(f => f.RiskLevel == Enums.RiskLevel.High).Include(f => f.Donation).ToListAsync();
+        public async Task<IEnumerable<FraudFlag>> GetAllFlagsAsync() => await _context.FraudFlags.Include(f => f.Donation).ThenInclude(d => d.User).ToListAsync();
+        public async Task<IEnumerable<FraudFlag>> GetHighRiskFlagsAsync() => await _context.FraudFlags.Where(f => f.RiskLevel == Enums.RiskLevel.High).Include(f => f.Donation).ThenInclude(d => d.User).ToListAsync();
         public async Task AddFraudFlagAsync(FraudFlag flag) => await _context.FraudFlags.AddAsync(flag);
         public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
     }

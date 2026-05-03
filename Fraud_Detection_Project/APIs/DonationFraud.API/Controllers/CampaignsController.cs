@@ -7,6 +7,7 @@ namespace DonationFraud.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    // [Authorize]
     public class CampaignsController : ControllerBase
     {
         private readonly ICampaignService _campaignService;

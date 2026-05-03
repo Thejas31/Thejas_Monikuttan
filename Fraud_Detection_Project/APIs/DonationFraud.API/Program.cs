@@ -72,6 +72,29 @@ builder.Services.AddScoped<IFraudRule, SameIPRule>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+// 6. Add CORS for Angular Frontend
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularFrontend", policy =>
+    {
+        policy.WithOrigins(
+                "http://localhost:4200",    // Angular dev server
+                "https://localhost:4200"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+
+    // Permissive policy for development — allows any origin
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 // 5. Swagger with JWT Support
 builder.Services.AddSwaggerGen(c =>
 {
@@ -123,6 +146,16 @@ app.MapGet("/scalar", () => Results.Redirect("/scalar/v1"));
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
+
+// Use CORS — must be before UseAuthentication/UseAuthorization
+if (app.Environment.IsDevelopment())
+{
+    app.UseCors("AllowAll");
+}
+else
+{
+    app.UseCors("AllowAngularFrontend");
+}
 
 app.UseAuthentication();
 app.UseAuthorization();
