@@ -25,8 +25,11 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 
 // 2. Add Database Context
-builder.Services.AddDbContext<DonationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+if (!builder.Environment.IsEnvironment("Testing"))
+{
+    builder.Services.AddDbContext<DonationDbContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+}
 
 // 3. Add Authentication & JWT
 var jwtKey = builder.Configuration["JwtSettings:Secret"] ?? "SuperSecretKeyForDonationFraudSystem123!";
@@ -180,3 +183,5 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+public partial class Program { }

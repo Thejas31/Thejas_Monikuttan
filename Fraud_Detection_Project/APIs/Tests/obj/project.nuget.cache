@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "TdKoXHojDoA=",
+  "dgSpecHash": "AV6rIxWrWns=",
   "success": true,
-  "projectFilePath": "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\APIs\\Tests\\DonationFraud.Tests.csproj",
+  "projectFilePath": "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\APIs\\tests\\DonationFraud.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\VICTUS\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\VICTUS\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",

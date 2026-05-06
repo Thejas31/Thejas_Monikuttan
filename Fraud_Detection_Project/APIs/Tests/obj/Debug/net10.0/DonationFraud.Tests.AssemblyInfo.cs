@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DonationFraud.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+577d60f73f5b540274e44676f8fbccfd6ea11149")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e8127446059cbf3e548c583bf63dee5b1f7cb3b9")]
 [assembly: System.Reflection.AssemblyProductAttribute("DonationFraud.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DonationFraud.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

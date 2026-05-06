@@ -1,0 +1,212 @@
+2026-05-06 20:28:48.719 +05:30 [INF] Saved 0 entities to in-memory store.
+2026-05-06 20:28:48.961 +05:30 [INF] Saved 3 entities to in-memory store.
+2026-05-06 20:28:48.976 +05:30 [INF] User profile is available. Using 'C:\Users\VICTUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-06 20:28:49.064 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-06 20:28:49.065 +05:30 [INF] Hosting environment: Testing
+2026-05-06 20:28:49.065 +05:30 [INF] Content root path: D:\college work\Training-H&R Block Courses\Thejas_Monikuttan\Fraud_Detection_Project\APIs\DonationFraud.API
+2026-05-06 20:28:49.092 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost/api/campaigns/999 - null null
+2026-05-06 20:28:49.122 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-05-06 20:28:49.459 +05:30 [INF] Executing endpoint 'DonationFraud.API.Controllers.CampaignsController.GetCampaign (DonationFraud.API)'
+2026-05-06 20:28:49.478 +05:30 [INF] Route matched with {action = "GetCampaign", controller = "Campaigns"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCampaign(Int32) on controller DonationFraud.API.Controllers.CampaignsController (DonationFraud.API).
+2026-05-06 20:28:49.527 +05:30 [INF] Executing ObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ProblemDetails'.
+2026-05-06 20:28:49.555 +05:30 [INF] Executed action DonationFraud.API.Controllers.CampaignsController.GetCampaign (DonationFraud.API) in 73.7821ms
+2026-05-06 20:28:49.556 +05:30 [INF] Executed endpoint 'DonationFraud.API.Controllers.CampaignsController.GetCampaign (DonationFraud.API)'
+2026-05-06 20:28:49.559 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost/api/campaigns/999 - 404 null application/problem+json; charset=utf-8 469.4146ms
+2026-05-06 20:28:49.570 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost/api/campaigns - null null
+2026-05-06 20:28:49.573 +05:30 [INF] Executing endpoint 'DonationFraud.API.Controllers.CampaignsController.GetCampaigns (DonationFraud.API)'
+2026-05-06 20:28:49.580 +05:30 [INF] Route matched with {action = "GetCampaigns", controller = "Campaigns"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCampaigns() on controller DonationFraud.API.Controllers.CampaignsController (DonationFraud.API).
+2026-05-06 20:28:49.593 +05:30 [INF] Executing OkObjectResult, writing value of type 'System.Linq.Enumerable+ListSelectIterator`2[[DonationFraud.API.Entities.Campaign, DonationFraud.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[DonationFraud.API.DTOs.CampaignResponseDto, DonationFraud.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-05-06 20:28:49.600 +05:30 [INF] Executed action DonationFraud.API.Controllers.CampaignsController.GetCampaigns (DonationFraud.API) in 20.1771ms
+2026-05-06 20:28:49.601 +05:30 [INF] Executed endpoint 'DonationFraud.API.Controllers.CampaignsController.GetCampaigns (DonationFraud.API)'
+2026-05-06 20:28:49.601 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost/api/campaigns - 200 null application/json; charset=utf-8 30.8679ms
+2026-05-06 20:28:49.606 +05:30 [INF] Application is shutting down...
+2026-05-06 20:33:29.582 +05:30 [INF] Saved 0 entities to in-memory store.
+2026-05-06 20:33:29.817 +05:30 [INF] Saved 3 entities to in-memory store.
+2026-05-06 20:33:29.835 +05:30 [INF] User profile is available. Using 'C:\Users\VICTUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-06 20:33:29.907 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-06 20:33:29.907 +05:30 [INF] Hosting environment: Testing
+2026-05-06 20:33:29.907 +05:30 [INF] Content root path: D:\college work\Training-H&R Block Courses\Thejas_Monikuttan\Fraud_Detection_Project\APIs\DonationFraud.API
+2026-05-06 20:33:29.932 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost/api/campaigns/999 - null null
+2026-05-06 20:33:29.962 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-05-06 20:33:29.975 +05:30 [INF] Executing endpoint 'DonationFraud.API.Controllers.CampaignsController.GetCampaign (DonationFraud.API)'
+2026-05-06 20:33:29.989 +05:30 [INF] Route matched with {action = "GetCampaign", controller = "Campaigns"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCampaign(Int32) on controller DonationFraud.API.Controllers.CampaignsController (DonationFraud.API).
+2026-05-06 20:33:30.027 +05:30 [INF] Executing ObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ProblemDetails'.
+2026-05-06 20:33:30.052 +05:30 [INF] Executed action DonationFraud.API.Controllers.CampaignsController.GetCampaign (DonationFraud.API) in 60.8615ms
+2026-05-06 20:33:30.053 +05:30 [INF] Executed endpoint 'DonationFraud.API.Controllers.CampaignsController.GetCampaign (DonationFraud.API)'
+2026-05-06 20:33:30.056 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost/api/campaigns/999 - 404 null application/problem+json; charset=utf-8 125.4179ms
+2026-05-06 20:33:30.066 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost/api/campaigns - null null
+2026-05-06 20:33:30.069 +05:30 [INF] Executing endpoint 'DonationFraud.API.Controllers.CampaignsController.GetCampaigns (DonationFraud.API)'
+2026-05-06 20:33:30.073 +05:30 [INF] Route matched with {action = "GetCampaigns", controller = "Campaigns"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCampaigns() on controller DonationFraud.API.Controllers.CampaignsController (DonationFraud.API).
+2026-05-06 20:33:30.088 +05:30 [INF] Executing OkObjectResult, writing value of type 'System.Linq.Enumerable+ListSelectIterator`2[[DonationFraud.API.Entities.Campaign, DonationFraud.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[DonationFraud.API.DTOs.CampaignResponseDto, DonationFraud.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-05-06 20:33:30.098 +05:30 [INF] Executed action DonationFraud.API.Controllers.CampaignsController.GetCampaigns (DonationFraud.API) in 24.5462ms
+2026-05-06 20:33:30.098 +05:30 [INF] Executed endpoint 'DonationFraud.API.Controllers.CampaignsController.GetCampaigns (DonationFraud.API)'
+2026-05-06 20:33:30.098 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost/api/campaigns - 200 null application/json; charset=utf-8 32.2725ms
+2026-05-06 20:33:30.103 +05:30 [INF] Application is shutting down...
+2026-05-06 20:39:31.004 +05:30 [INF] Saved 0 entities to in-memory store.
+2026-05-06 20:39:31.246 +05:30 [INF] Saved 3 entities to in-memory store.
+2026-05-06 20:39:31.246 +05:30 [INF] Saved 3 entities to in-memory store.
+2026-05-06 20:39:31.246 +05:30 [INF] Saved 3 entities to in-memory store.
+2026-05-06 20:39:31.246 +05:30 [INF] Saved 3 entities to in-memory store.
+2026-05-06 20:39:31.260 +05:30 [INF] User profile is available. Using 'C:\Users\VICTUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-06 20:39:31.260 +05:30 [INF] User profile is available. Using 'C:\Users\VICTUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-06 20:39:31.260 +05:30 [INF] User profile is available. Using 'C:\Users\VICTUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-06 20:39:31.260 +05:30 [INF] User profile is available. Using 'C:\Users\VICTUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-06 20:39:31.332 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-06 20:39:31.333 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-06 20:39:31.333 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-06 20:39:31.333 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-06 20:39:31.333 +05:30 [INF] Hosting environment: Testing
+2026-05-06 20:39:31.333 +05:30 [INF] Hosting environment: Testing
+2026-05-06 20:39:31.333 +05:30 [INF] Hosting environment: Testing
+2026-05-06 20:39:31.333 +05:30 [INF] Content root path: D:\college work\Training-H&R Block Courses\Thejas_Monikuttan\Fraud_Detection_Project\APIs\DonationFraud.API
+2026-05-06 20:39:31.333 +05:30 [INF] Content root path: D:\college work\Training-H&R Block Courses\Thejas_Monikuttan\Fraud_Detection_Project\APIs\DonationFraud.API
+2026-05-06 20:39:31.333 +05:30 [INF] Hosting environment: Testing
+2026-05-06 20:39:31.333 +05:30 [INF] Content root path: D:\college work\Training-H&R Block Courses\Thejas_Monikuttan\Fraud_Detection_Project\APIs\DonationFraud.API
+2026-05-06 20:39:31.333 +05:30 [INF] Content root path: D:\college work\Training-H&R Block Courses\Thejas_Monikuttan\Fraud_Detection_Project\APIs\DonationFraud.API
+2026-05-06 20:39:31.356 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost/api/campaigns/999 - null null
+2026-05-06 20:39:31.356 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost/api/fraud/high-risk - null null
+2026-05-06 20:39:31.356 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost/api/donations - application/json; charset=utf-8 55
+2026-05-06 20:39:31.356 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost/api/auth/register - application/json; charset=utf-8 73
+2026-05-06 20:39:31.389 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-05-06 20:39:31.389 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-05-06 20:39:31.389 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-05-06 20:39:31.389 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-05-06 20:39:31.404 +05:30 [INF] Executing endpoint 'DonationFraud.API.Controllers.CampaignsController.GetCampaign (DonationFraud.API)'
+2026-05-06 20:39:31.404 +05:30 [INF] Executing endpoint 'DonationFraud.API.Controllers.AuthController.Register (DonationFraud.API)'
+2026-05-06 20:39:31.406 +05:30 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin)
+2026-05-06 20:39:31.406 +05:30 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-05-06 20:39:31.410 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-05-06 20:39:31.410 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-05-06 20:39:31.415 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost/api/donations - 401 null null 59.9955ms
+2026-05-06 20:39:31.415 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost/api/fraud/high-risk - 401 null null 60.2542ms
+2026-05-06 20:39:31.420 +05:30 [INF] Route matched with {action = "Register", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Register(DonationFraud.API.DTOs.RegisterRequestDto) on controller DonationFraud.API.Controllers.AuthController (DonationFraud.API).
+2026-05-06 20:39:31.420 +05:30 [INF] Route matched with {action = "GetCampaign", controller = "Campaigns"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCampaign(Int32) on controller DonationFraud.API.Controllers.CampaignsController (DonationFraud.API).
+2026-05-06 20:39:31.431 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost/api/donations/user/1 - null null
+2026-05-06 20:39:31.432 +05:30 [INF] Request starting HTTP/1.1 PUT http://localhost/api/fraud/1/review - application/json; charset=utf-8 38
+2026-05-06 20:39:31.434 +05:30 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-05-06 20:39:31.434 +05:30 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin)
+2026-05-06 20:39:31.435 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-05-06 20:39:31.435 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-05-06 20:39:31.435 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost/api/donations/user/1 - 401 null null 4.3419ms
+2026-05-06 20:39:31.435 +05:30 [INF] Request finished HTTP/1.1 PUT http://localhost/api/fraud/1/review - 401 null null 3.0973ms
+2026-05-06 20:39:31.438 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost/api/fraud - null null
+2026-05-06 20:39:31.440 +05:30 [INF] Application is shutting down...
+2026-05-06 20:39:31.440 +05:30 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin)
+2026-05-06 20:39:31.440 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-05-06 20:39:31.441 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost/api/fraud - 401 null null 3.3443ms
+2026-05-06 20:39:31.443 +05:30 [INF] Application is shutting down...
+2026-05-06 20:39:31.465 +05:30 [INF] Executing ObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ProblemDetails'.
+2026-05-06 20:39:31.484 +05:30 [INF] Executed action DonationFraud.API.Controllers.CampaignsController.GetCampaign (DonationFraud.API) in 61.4368ms
+2026-05-06 20:39:31.484 +05:30 [INF] Executed endpoint 'DonationFraud.API.Controllers.CampaignsController.GetCampaign (DonationFraud.API)'
+2026-05-06 20:39:31.485 +05:30 [INF] Saved 1 entities to in-memory store.
+2026-05-06 20:39:31.485 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost/api/campaigns/999 - 404 null application/problem+json; charset=utf-8 130.4ms
+2026-05-06 20:39:31.487 +05:30 [INF] Saved 1 entities to in-memory store.
+2026-05-06 20:39:31.488 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost/api/campaigns - null null
+2026-05-06 20:39:31.488 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-05-06 20:39:31.489 +05:30 [INF] Executing endpoint 'DonationFraud.API.Controllers.CampaignsController.GetCampaigns (DonationFraud.API)'
+2026-05-06 20:39:31.490 +05:30 [INF] Executed action DonationFraud.API.Controllers.AuthController.Register (DonationFraud.API) in 69.8186ms
+2026-05-06 20:39:31.490 +05:30 [INF] Executed endpoint 'DonationFraud.API.Controllers.AuthController.Register (DonationFraud.API)'
+2026-05-06 20:39:31.490 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost/api/auth/register - 200 null application/json; charset=utf-8 135.3083ms
+2026-05-06 20:39:31.494 +05:30 [INF] Route matched with {action = "GetCampaigns", controller = "Campaigns"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCampaigns() on controller DonationFraud.API.Controllers.CampaignsController (DonationFraud.API).
+2026-05-06 20:39:31.504 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost/api/auth/login - application/json; charset=utf-8 51
+2026-05-06 20:39:31.504 +05:30 [INF] Executing OkObjectResult, writing value of type 'System.Linq.Enumerable+ListSelectIterator`2[[DonationFraud.API.Entities.Campaign, DonationFraud.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[DonationFraud.API.DTOs.CampaignResponseDto, DonationFraud.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-05-06 20:39:31.506 +05:30 [INF] Executing endpoint 'DonationFraud.API.Controllers.AuthController.Login (DonationFraud.API)'
+2026-05-06 20:39:31.508 +05:30 [INF] Executed action DonationFraud.API.Controllers.CampaignsController.GetCampaigns (DonationFraud.API) in 13.8954ms
+2026-05-06 20:39:31.509 +05:30 [INF] Executed endpoint 'DonationFraud.API.Controllers.CampaignsController.GetCampaigns (DonationFraud.API)'
+2026-05-06 20:39:31.509 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost/api/campaigns - 200 null application/json; charset=utf-8 21.0336ms
+2026-05-06 20:39:31.510 +05:30 [INF] Application is shutting down...
+2026-05-06 20:39:31.511 +05:30 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(DonationFraud.API.DTOs.LoginRequestDto) on controller DonationFraud.API.Controllers.AuthController (DonationFraud.API).
+2026-05-06 20:39:31.517 +05:30 [INF] Executing UnauthorizedObjectResult, writing value of type 'System.String'.
+2026-05-06 20:39:31.518 +05:30 [INF] Executed action DonationFraud.API.Controllers.AuthController.Login (DonationFraud.API) in 6.8253ms
+2026-05-06 20:39:31.518 +05:30 [INF] Executed endpoint 'DonationFraud.API.Controllers.AuthController.Login (DonationFraud.API)'
+2026-05-06 20:39:31.518 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost/api/auth/login - 401 null text/plain; charset=utf-8 13.8523ms
+2026-05-06 20:39:31.519 +05:30 [INF] Application is shutting down...
+2026-05-06 20:40:53.611 +05:30 [INF] Saved 0 entities to in-memory store.
+2026-05-06 20:40:53.857 +05:30 [INF] Saved 3 entities to in-memory store.
+2026-05-06 20:40:53.857 +05:30 [INF] Saved 3 entities to in-memory store.
+2026-05-06 20:40:53.857 +05:30 [INF] Saved 3 entities to in-memory store.
+2026-05-06 20:40:53.857 +05:30 [INF] Saved 3 entities to in-memory store.
+2026-05-06 20:40:53.875 +05:30 [INF] User profile is available. Using 'C:\Users\VICTUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-06 20:40:53.875 +05:30 [INF] User profile is available. Using 'C:\Users\VICTUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-06 20:40:53.875 +05:30 [INF] User profile is available. Using 'C:\Users\VICTUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-06 20:40:53.875 +05:30 [INF] User profile is available. Using 'C:\Users\VICTUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-06 20:40:53.960 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-06 20:40:53.960 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-06 20:40:53.960 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-06 20:40:53.960 +05:30 [INF] Hosting environment: Testing
+2026-05-06 20:40:53.960 +05:30 [INF] Hosting environment: Testing
+2026-05-06 20:40:53.960 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-06 20:40:53.960 +05:30 [INF] Content root path: D:\college work\Training-H&R Block Courses\Thejas_Monikuttan\Fraud_Detection_Project\APIs\DonationFraud.API
+2026-05-06 20:40:53.960 +05:30 [INF] Hosting environment: Testing
+2026-05-06 20:40:53.960 +05:30 [INF] Content root path: D:\college work\Training-H&R Block Courses\Thejas_Monikuttan\Fraud_Detection_Project\APIs\DonationFraud.API
+2026-05-06 20:40:53.960 +05:30 [INF] Hosting environment: Testing
+2026-05-06 20:40:53.960 +05:30 [INF] Content root path: D:\college work\Training-H&R Block Courses\Thejas_Monikuttan\Fraud_Detection_Project\APIs\DonationFraud.API
+2026-05-06 20:40:53.960 +05:30 [INF] Content root path: D:\college work\Training-H&R Block Courses\Thejas_Monikuttan\Fraud_Detection_Project\APIs\DonationFraud.API
+2026-05-06 20:40:53.984 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost/api/campaigns/999 - null null
+2026-05-06 20:40:53.984 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost/api/donations - application/json; charset=utf-8 55
+2026-05-06 20:40:53.984 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost/api/auth/register - application/json; charset=utf-8 98
+2026-05-06 20:40:53.984 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost/api/fraud/high-risk - null null
+2026-05-06 20:40:54.016 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-05-06 20:40:54.016 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-05-06 20:40:54.016 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-05-06 20:40:54.016 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-05-06 20:40:54.032 +05:30 [INF] Executing endpoint 'DonationFraud.API.Controllers.AuthController.Register (DonationFraud.API)'
+2026-05-06 20:40:54.032 +05:30 [INF] Executing endpoint 'DonationFraud.API.Controllers.CampaignsController.GetCampaign (DonationFraud.API)'
+2026-05-06 20:40:54.034 +05:30 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-05-06 20:40:54.034 +05:30 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin)
+2026-05-06 20:40:54.038 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-05-06 20:40:54.038 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-05-06 20:40:54.043 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost/api/fraud/high-risk - 401 null null 60.2837ms
+2026-05-06 20:40:54.043 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost/api/donations - 401 null null 60.2868ms
+2026-05-06 20:40:54.048 +05:30 [INF] Route matched with {action = "Register", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Register(DonationFraud.API.DTOs.RegisterRequestDto) on controller DonationFraud.API.Controllers.AuthController (DonationFraud.API).
+2026-05-06 20:40:54.048 +05:30 [INF] Route matched with {action = "GetCampaign", controller = "Campaigns"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCampaign(Int32) on controller DonationFraud.API.Controllers.CampaignsController (DonationFraud.API).
+2026-05-06 20:40:54.060 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost/api/donations/user/1 - null null
+2026-05-06 20:40:54.063 +05:30 [INF] Request starting HTTP/1.1 PUT http://localhost/api/fraud/1/review - application/json; charset=utf-8 38
+2026-05-06 20:40:54.064 +05:30 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-05-06 20:40:54.064 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-05-06 20:40:54.065 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost/api/donations/user/1 - 401 null null 4.8003ms
+2026-05-06 20:40:54.066 +05:30 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin)
+2026-05-06 20:40:54.066 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-05-06 20:40:54.067 +05:30 [INF] Request finished HTTP/1.1 PUT http://localhost/api/fraud/1/review - 401 null null 3.6714ms
+2026-05-06 20:40:54.069 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost/api/fraud - null null
+2026-05-06 20:40:54.070 +05:30 [INF] Application is shutting down...
+2026-05-06 20:40:54.072 +05:30 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin)
+2026-05-06 20:40:54.073 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-05-06 20:40:54.073 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost/api/fraud - 401 null null 3.9657ms
+2026-05-06 20:40:54.074 +05:30 [INF] Application is shutting down...
+2026-05-06 20:40:54.095 +05:30 [INF] Executing ObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ProblemDetails'.
+2026-05-06 20:40:54.114 +05:30 [INF] Executed action DonationFraud.API.Controllers.CampaignsController.GetCampaign (DonationFraud.API) in 62.9415ms
+2026-05-06 20:40:54.115 +05:30 [INF] Executed endpoint 'DonationFraud.API.Controllers.CampaignsController.GetCampaign (DonationFraud.API)'
+2026-05-06 20:40:54.116 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost/api/campaigns/999 - 404 null application/problem+json; charset=utf-8 133.9601ms
+2026-05-06 20:40:54.117 +05:30 [INF] Saved 1 entities to in-memory store.
+2026-05-06 20:40:54.119 +05:30 [INF] Saved 1 entities to in-memory store.
+2026-05-06 20:40:54.120 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost/api/campaigns - null null
+2026-05-06 20:40:54.121 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-05-06 20:40:54.121 +05:30 [INF] Executing endpoint 'DonationFraud.API.Controllers.CampaignsController.GetCampaigns (DonationFraud.API)'
+2026-05-06 20:40:54.123 +05:30 [INF] Executed action DonationFraud.API.Controllers.AuthController.Register (DonationFraud.API) in 74.5281ms
+2026-05-06 20:40:54.123 +05:30 [INF] Executed endpoint 'DonationFraud.API.Controllers.AuthController.Register (DonationFraud.API)'
+2026-05-06 20:40:54.123 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost/api/auth/register - 200 null application/json; charset=utf-8 141.3597ms
+2026-05-06 20:40:54.126 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost/api/auth/login - application/json; charset=utf-8 51
+2026-05-06 20:40:54.127 +05:30 [INF] Route matched with {action = "GetCampaigns", controller = "Campaigns"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCampaigns() on controller DonationFraud.API.Controllers.CampaignsController (DonationFraud.API).
+2026-05-06 20:40:54.128 +05:30 [INF] Executing endpoint 'DonationFraud.API.Controllers.AuthController.Login (DonationFraud.API)'
+2026-05-06 20:40:54.134 +05:30 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(DonationFraud.API.DTOs.LoginRequestDto) on controller DonationFraud.API.Controllers.AuthController (DonationFraud.API).
+2026-05-06 20:40:54.138 +05:30 [INF] Executing OkObjectResult, writing value of type 'System.Linq.Enumerable+ListSelectIterator`2[[DonationFraud.API.Entities.Campaign, DonationFraud.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[DonationFraud.API.DTOs.CampaignResponseDto, DonationFraud.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-05-06 20:40:54.140 +05:30 [INF] Executing UnauthorizedObjectResult, writing value of type 'System.String'.
+2026-05-06 20:40:54.141 +05:30 [INF] Executed action DonationFraud.API.Controllers.AuthController.Login (DonationFraud.API) in 6.8761ms
+2026-05-06 20:40:54.141 +05:30 [INF] Executed endpoint 'DonationFraud.API.Controllers.AuthController.Login (DonationFraud.API)'
+2026-05-06 20:40:54.142 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost/api/auth/login - 401 null text/plain; charset=utf-8 15.5536ms
+2026-05-06 20:40:54.143 +05:30 [INF] Application is shutting down...
+2026-05-06 20:40:54.144 +05:30 [INF] Executed action DonationFraud.API.Controllers.CampaignsController.GetCampaigns (DonationFraud.API) in 17.1619ms
+2026-05-06 20:40:54.144 +05:30 [INF] Executed endpoint 'DonationFraud.API.Controllers.CampaignsController.GetCampaigns (DonationFraud.API)'
+2026-05-06 20:40:54.144 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost/api/campaigns - 200 null application/json; charset=utf-8 24.478ms
+2026-05-06 20:40:54.146 +05:30 [INF] Application is shutting down...
