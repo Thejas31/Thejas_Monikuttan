@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 import { AlertDTO, DashboardStatsDTO } from '../models/alert.dto';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FraudService {
-
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   getDashboardStats(): Observable<DashboardStatsDTO> {
     return of({
@@ -19,48 +21,32 @@ export class FraudService {
   }
 
   getRecentAlerts(): Observable<AlertDTO[]> {
-    return of([
-      {
-        donationId: 'DN-10421',
-        donorName: 'John Smith',
-        amount: 50000,
-        riskScore: 92,
-        reason: 'Multiple cards used from the same IP address within 15 minutes.',
-        status: 'Pending',
-        date: '10-May-2026 10:45 AM',
-        paymentMethod: 'Credit Card',
-        ipAddress: '192.168.10.25',
-        country: 'India'
-      },
-      {
-        donationId: 'DN-10418',
-        donorName: 'Priya Nair',
-        amount: 75000,
-        riskScore: 88,
-        reason: 'High-value new donor',
-        status: 'Resolved',
-        date: '10-May-2026 09:30 AM',
-        paymentMethod: 'Bank Transfer',
-        ipAddress: '117.200.10.5',
-        country: 'India'
-      },
-      {
-        donationId: 'DN-10412',
-        donorName: 'Anonymous',
-        amount: 15000,
-        riskScore: 71,
-        reason: 'Suspicious IP address',
-        status: 'Pending',
-        date: '09-May-2026 08:15 PM',
-        paymentMethod: 'Debit Card',
-        ipAddress: '45.22.100.1',
-        country: 'Russia'
-      }
-    ]);
+    return this.http.get<any[]>(`${environment.apiUrl}/fraud`).pipe(
+      map(flags => {
+        // Map backend FraudFlag objects to Frontend AlertDTO
+        return flags.map(f => ({
+          donationId: f.donationId?.toString() || f.id.toString(),
+          donorName: 'Donor ' + f.donationId, // Can be improved if backend returns donor name
+          amount: 0, // Fill if available from backend
+          riskScore: f.riskScore,
+          reason: f.reason,
+          status: f.status,
+          date: new Date(f.flaggedDate).toLocaleString(),
+          paymentMethod: 'Unknown',
+          ipAddress: 'Unknown',
+          country: 'Unknown'
+        }));
+      })
+    );
   }
 
   reviewAlert(donationId: string, decision: string, notes: string): Observable<{success: boolean}> {
-    console.log(`Alert ${donationId} reviewed. Decision: ${decision}, Notes: ${notes}`);
-    return of({ success: true });
+    const isApproved = decision === 'Approve';
+    return this.http.put<any>(`${environment.apiUrl}/fraud/${donationId}/review`, {
+      isApproved,
+      notes
+    }).pipe(
+      map(() => ({ success: true }))
+    );
   }
 }

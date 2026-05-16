@@ -27,8 +27,8 @@
       <div class="flex items-center gap-2">
         <span class="text-slate-400 text-xs">Status:</span>
         <div class="flex rounded-xl overflow-hidden border border-slate-700">
-          <button *ngFor="let s of ['All', 'Pending', 'Resolved']"
-            (click)="setStatusFilter(s as any)"
+          <button *ngFor="let s of statusFilters"
+            (click)="setStatusFilter(s)"
             [ngClass]="statusFilter === s ? 'bg-primary text-white' : 'text-slate-400 hover:text-white'"
             class="px-3 py-1.5 text-xs font-medium transition-all duration-200">
             {{ s }}
@@ -40,8 +40,8 @@
       <div class="flex items-center gap-2">
         <span class="text-slate-400 text-xs">Risk:</span>
         <div class="flex rounded-xl overflow-hidden border border-slate-700">
-          <button *ngFor="let r of ['All', 'High', 'Medium', 'Low']"
-            (click)="setRiskFilter(r as any)"
+          <button *ngFor="let r of riskFilters"
+            (click)="setRiskFilter(r)"
             [ngClass]="riskFilter === r ? 'bg-primary text-white' : 'text-slate-400 hover:text-white'"
             class="px-3 py-1.5 text-xs font-medium transition-all duration-200">
             {{ r }}

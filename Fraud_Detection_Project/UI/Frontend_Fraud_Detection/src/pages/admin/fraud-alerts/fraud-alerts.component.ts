@@ -22,6 +22,9 @@ export class FraudAlertsComponent implements OnInit {
   riskFilter: 'All' | 'High' | 'Medium' | 'Low' = 'All';
   searchTerm = '';
 
+  statusFilters = ['All', 'Pending', 'Resolved'];
+  riskFilters = ['All', 'High', 'Medium', 'Low'];
+
   constructor(private fraudService: FraudService) {}
 
   ngOnInit() {
@@ -48,13 +51,13 @@ export class FraudAlertsComponent implements OnInit {
     });
   }
 
-  setStatusFilter(filter: 'All' | 'Pending' | 'Resolved') {
-    this.statusFilter = filter;
+  setStatusFilter(filter: string) {
+    this.statusFilter = filter as 'All' | 'Pending' | 'Resolved';
     this.applyFilters();
   }
 
-  setRiskFilter(filter: 'All' | 'High' | 'Medium' | 'Low') {
-    this.riskFilter = filter;
+  setRiskFilter(filter: string) {
+    this.riskFilter = filter as 'All' | 'High' | 'Medium' | 'Low';
     this.applyFilters();
   }
 

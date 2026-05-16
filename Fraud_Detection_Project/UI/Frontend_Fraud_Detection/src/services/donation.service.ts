@@ -1,24 +1,33 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { DonationDTO, CampaignDTO } from '../models/donation.dto';
+import { environment } from '../environments/environment';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DonationService {
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   getCampaigns(): Observable<CampaignDTO[]> {
-    return of([
-      { id: '1', name: 'Children Education Fund' },
-      { id: '2', name: 'Disaster Relief Fund' },
-      { id: '3', name: 'Medical Emergency Fund' }
-    ]);
+    // Assuming backend has a campaigns endpoint. Adjust if different.
+    return this.http.get<CampaignDTO[]>(`${environment.apiUrl}/campaigns`);
   }
 
   submitDonation(donation: DonationDTO): Observable<{success: boolean, message: string}> {
-    // Mock API call
-    console.log('Donation submitted:', donation);
-    return of({ success: true, message: 'Donation processed securely' });
+    // Map Frontend DTO to Backend CreateDonationDto
+    const backendDto = {
+      campaignId: parseInt(donation.campaignId, 10),
+      amount: donation.amount
+    };
+
+    return this.http.post<any>(`${environment.apiUrl}/donations`, backendDto).pipe(
+      map(response => ({
+        success: true,
+        message: response.message || 'Donation processed securely'
+      }))
+    );
   }
 }

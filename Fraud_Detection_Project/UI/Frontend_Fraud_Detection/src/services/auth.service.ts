@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 import { UserDTO, LoginDTO, RegisterDTO } from '../models/user.dto';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,36 +12,67 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<UserDTO | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor() {}
-
-  // MOCK LOGIN for now - later replace with HttpClient
-  login(credentials: LoginDTO): Observable<UserDTO> {
-    let mockUser: UserDTO;
-    
-    // Simulate role based on email
-    if (credentials.email.includes('admin')) {
-      mockUser = { id: '1', email: credentials.email, role: 'Admin', firstName: 'Admin', lastName: 'User', token: 'mock-jwt-token' };
-    } else {
-      mockUser = { id: '2', email: credentials.email, role: 'User', firstName: 'Standard', lastName: 'User', token: 'mock-jwt-token' };
+  constructor(private http: HttpClient) {
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedUser) {
+      this.currentUserSubject.next(JSON.parse(savedUser));
     }
+  }
 
-    this.currentUserSubject.next(mockUser);
-    localStorage.setItem('currentUser', JSON.stringify(mockUser));
-    return of(mockUser);
+  login(credentials: LoginDTO): Observable<UserDTO> {
+    return this.http.post<{ token: string }>(`${environment.apiUrl}/auth/login`, {
+      username: credentials.email, // backend expects Username
+      password: credentials.password
+    }).pipe(
+      map(response => {
+        const token = response.token;
+        const decoded = this.decodeToken(token);
+        const user: UserDTO = {
+          id: decoded.nameid || '0',
+          email: credentials.email,
+          role: decoded.role || 'User',
+          firstName: credentials.email.split('@')[0], // Extract from email for display
+          lastName: '',
+          token: token
+        };
+        this.currentUserSubject.next(user);
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        return user;
+      })
+    );
   }
 
   register(data: RegisterDTO): Observable<UserDTO> {
-    const newUser: UserDTO = {
-      id: Math.random().toString(36).substr(2, 9),
+    return this.http.post<{ token: string }>(`${environment.apiUrl}/auth/register`, {
+      username: data.email, // Mapping email to username
       email: data.email,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      role: 'User',
-      token: 'mock-jwt-token'
-    };
-    this.currentUserSubject.next(newUser);
-    localStorage.setItem('currentUser', JSON.stringify(newUser));
-    return of(newUser);
+      password: data.password,
+      role: 'User'
+    }).pipe(
+      map(response => {
+        const token = response.token;
+        const decoded = this.decodeToken(token);
+        const user: UserDTO = {
+          id: decoded.nameid || '0',
+          email: data.email,
+          role: 'User',
+          firstName: data.firstName,
+          lastName: data.lastName,
+          token: token
+        };
+        this.currentUserSubject.next(user);
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        return user;
+      })
+    );
+  }
+
+  private decodeToken(token: string): any {
+    try {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch (e) {
+      return {};
+    }
   }
 
   logout() {
