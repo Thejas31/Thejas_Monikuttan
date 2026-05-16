@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\APIs\\tests\\DonationFraud.Tests.csproj": {}
+    "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\apis\\tests\\DonationFraud.Tests.csproj": {}
   },
   "projects": {
-    "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\APIs\\DonationFraud.API\\DonationFraud.API.csproj": {
+    "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\apis\\DonationFraud.API\\DonationFraud.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\APIs\\DonationFraud.API\\DonationFraud.API.csproj",
+        "projectUniqueName": "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\apis\\DonationFraud.API\\DonationFraud.API.csproj",
         "projectName": "DonationFraud.API",
-        "projectPath": "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\APIs\\DonationFraud.API\\DonationFraud.API.csproj",
+        "projectPath": "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\apis\\DonationFraud.API\\DonationFraud.API.csproj",
         "packagesPath": "C:\\Users\\VICTUS\\.nuget\\packages\\",
-        "outputPath": "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\APIs\\DonationFraud.API\\obj\\",
+        "outputPath": "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\apis\\DonationFraud.API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -522,14 +522,14 @@
         }
       }
     },
-    "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\APIs\\tests\\DonationFraud.Tests.csproj": {
+    "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\apis\\tests\\DonationFraud.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\APIs\\tests\\DonationFraud.Tests.csproj",
+        "projectUniqueName": "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\apis\\tests\\DonationFraud.Tests.csproj",
         "projectName": "DonationFraud.Tests",
-        "projectPath": "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\APIs\\tests\\DonationFraud.Tests.csproj",
+        "projectPath": "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\apis\\tests\\DonationFraud.Tests.csproj",
         "packagesPath": "C:\\Users\\VICTUS\\.nuget\\packages\\",
-        "outputPath": "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\APIs\\tests\\obj\\",
+        "outputPath": "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\apis\\tests\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -550,8 +550,8 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\APIs\\DonationFraud.API\\DonationFraud.API.csproj": {
-                "projectPath": "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\APIs\\DonationFraud.API\\DonationFraud.API.csproj"
+              "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\apis\\DonationFraud.API\\DonationFraud.API.csproj": {
+                "projectPath": "D:\\college work\\Training-H&R Block Courses\\Thejas_Monikuttan\\Fraud_Detection_Project\\apis\\DonationFraud.API\\DonationFraud.API.csproj"
               }
             }
           }
