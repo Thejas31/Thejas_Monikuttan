@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AlertDTO } from '../../../models/alert.dto';
-import { FraudService } from '../../../services/fraud.service';
+import { AlertDTO } from '../../models/alert.dto';
+import { FraudService } from '../../services/fraud.service';
 
 @Component({
   selector: 'app-review-modal',
