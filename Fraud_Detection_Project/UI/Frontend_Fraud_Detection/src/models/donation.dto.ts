@@ -5,10 +5,12 @@ export interface DonationDTO {
   campaignName?: string;
   amount: number;
   donorName: string;
-  donorEmail: string;
+  donorEmail?: string;
   paymentMethod: string;
+  anonymous?: boolean;
   status?: string;
   date?: string;
+  message?: string;
 }
 
 export interface CampaignDTO {

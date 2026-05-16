@@ -1,0 +1,134 @@
+<div class="flex min-h-screen bg-dark-bg">
+  <app-sidebar></app-sidebar>
+
+  <main class="flex-1 ml-64 p-8 flex items-start justify-center">
+    <div class="w-full max-w-2xl">
+
+      <!-- Header -->
+      <div class="mb-8">
+        <h1 class="text-2xl font-bold text-white">Make a Donation</h1>
+        <p class="text-slate-400 text-sm mt-1">Your contribution is protected by our AI fraud detection system.</p>
+      </div>
+
+      <!-- Security Notice -->
+      <div class="flex items-center gap-3 p-4 mb-6 rounded-xl bg-primary/10 border border-primary/30">
+        <svg class="w-5 h-5 text-primary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+        <p class="text-sm text-primary">This transaction is secured with AES-256 encryption and AI fraud monitoring.</p>
+      </div>
+
+      <!-- Success Message -->
+      <div *ngIf="successMessage"
+        class="mb-6 p-4 rounded-xl bg-status-success/10 border border-status-success/30 text-status-success text-sm">
+        {{ successMessage }}
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage"
+        class="mb-6 p-4 rounded-xl bg-status-danger/10 border border-status-danger/30 text-status-danger text-sm">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Form Card -->
+      <div class="glass-card p-7 space-y-6">
+
+        <!-- Campaign -->
+        <div>
+          <label class="block text-slate-300 text-sm font-medium mb-2">
+            Campaign <span class="text-status-danger">*</span>
+          </label>
+          <select [(ngModel)]="donation.campaignId" name="campaignId"
+            class="w-full px-4 py-3 bg-dark-bg/50 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-white text-sm transition-all">
+            <option value="" disabled>Select a campaign to support...</option>
+            <option *ngFor="let c of campaigns" [value]="c.id">{{ c.name }}</option>
+          </select>
+        </div>
+
+        <!-- Preset Amounts -->
+        <div>
+          <label class="block text-slate-300 text-sm font-medium mb-3">
+            Donation Amount (₹) <span class="text-status-danger">*</span>
+          </label>
+          <div class="grid grid-cols-5 gap-2 mb-3">
+            <button *ngFor="let preset of presetAmounts"
+              (click)="selectAmount(preset)"
+              [ngClass]="donation.amount === preset
+                ? 'bg-primary border-primary text-white shadow-lg shadow-primary/20'
+                : 'border-slate-600 text-slate-300 hover:border-primary/50 hover:text-primary'"
+              class="py-2 text-sm font-semibold border rounded-xl transition-all duration-200">
+              {{ preset | number }}
+            </button>
+          </div>
+          <input type="number" [(ngModel)]="donation.amount" name="amount" min="1"
+            placeholder="Or enter custom amount..."
+            class="w-full px-4 py-3 bg-dark-bg/50 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-white placeholder-slate-500 text-sm transition-all">
+        </div>
+
+        <!-- Payment Method -->
+        <div>
+          <label class="block text-slate-300 text-sm font-medium mb-3">Payment Method</label>
+          <div class="grid grid-cols-2 gap-3">
+            <button *ngFor="let method of paymentMethods"
+              (click)="donation.paymentMethod = method"
+              [ngClass]="donation.paymentMethod === method
+                ? 'border-primary bg-primary/10 text-primary'
+                : 'border-slate-600 text-slate-300 hover:border-slate-500'"
+              class="flex items-center gap-2 px-4 py-3 border rounded-xl text-sm font-medium transition-all duration-200">
+              <span *ngIf="method === 'Credit Card'">💳</span>
+              <span *ngIf="method === 'Debit Card'">🏦</span>
+              <span *ngIf="method === 'Bank Transfer'">🔁</span>
+              <span *ngIf="method === 'UPI'">📱</span>
+              {{ method }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Donor Name -->
+        <div>
+          <label class="block text-slate-300 text-sm font-medium mb-2">
+            Your Name <span class="text-status-danger">*</span>
+          </label>
+          <input type="text" [(ngModel)]="donation.donorName" name="donorName"
+            placeholder="Full name"
+            class="w-full px-4 py-3 bg-dark-bg/50 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-white placeholder-slate-500 text-sm transition-all">
+        </div>
+
+        <!-- Anonymous Toggle -->
+        <div class="flex items-center justify-between p-4 bg-slate-800/50 rounded-xl">
+          <div>
+            <p class="text-slate-200 text-sm font-medium">Donate Anonymously</p>
+            <p class="text-slate-400 text-xs mt-0.5">Your name won't be shown publicly</p>
+          </div>
+          <button (click)="donation.anonymous = !donation.anonymous"
+            [ngClass]="donation.anonymous ? 'bg-primary' : 'bg-slate-600'"
+            class="relative w-11 h-6 rounded-full transition-colors duration-200 focus:outline-none">
+            <span class="block w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 absolute top-1"
+              [ngClass]="donation.anonymous ? 'translate-x-6' : 'translate-x-1'">
+            </span>
+          </button>
+        </div>
+
+        <!-- Message -->
+        <div>
+          <label class="block text-slate-300 text-sm font-medium mb-2">Message (Optional)</label>
+          <textarea [(ngModel)]="donation.message" rows="3" name="message"
+            placeholder="Leave a message of support..."
+            class="w-full px-4 py-3 bg-dark-bg/50 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-white placeholder-slate-500 text-sm resize-none transition-all">
+          </textarea>
+        </div>
+
+        <!-- Submit -->
+        <button (click)="onSubmit()" [disabled]="isSubmitting"
+          class="w-full py-3.5 px-6 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-dark hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg shadow-primary/25 transition-all duration-300 text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+          <svg *ngIf="isSubmitting" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+          </svg>
+          {{ isSubmitting ? 'Processing...' : '🔒 Donate Securely' }}
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
