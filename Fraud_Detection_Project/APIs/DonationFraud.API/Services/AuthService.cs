@@ -40,6 +40,8 @@ namespace DonationFraud.API.Services
             {
                 Username = request.Username,
                 Email = request.Email,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
                 PasswordHash = HashPassword(request.Password),
                 RoleId = role.Id
             };
@@ -79,6 +81,8 @@ namespace DonationFraud.API.Services
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.GivenName, user.FirstName ?? ""),
+                new Claim(ClaimTypes.Surname, user.LastName ?? ""),
                 new Claim(ClaimTypes.Role, roleName)
             };
 

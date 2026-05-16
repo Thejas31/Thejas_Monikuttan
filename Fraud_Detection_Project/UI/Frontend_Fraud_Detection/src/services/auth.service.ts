@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -12,10 +13,15 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<UserDTO | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient) {
-    const savedUser = localStorage.getItem('currentUser');
-    if (savedUser) {
-      this.currentUserSubject.next(JSON.parse(savedUser));
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      const savedUser = localStorage.getItem('currentUser');
+      if (savedUser) {
+        this.currentUserSubject.next(JSON.parse(savedUser));
+      }
     }
   }
 
@@ -27,16 +33,24 @@ export class AuthService {
       map(response => {
         const token = response.token;
         const decoded = this.decodeToken(token);
+        
+        // .NET stores roles and names using long claim URIs by default
+        const roleClaim = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || decoded.role || 'User';
+        const givenName = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'] || credentials.email.split('@')[0];
+        const surname = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname'] || '';
+
         const user: UserDTO = {
           id: decoded.nameid || '0',
           email: credentials.email,
-          role: decoded.role || 'User',
-          firstName: credentials.email.split('@')[0], // Extract from email for display
-          lastName: '',
+          role: roleClaim,
+          firstName: givenName,
+          lastName: surname,
           token: token
         };
         this.currentUserSubject.next(user);
-        localStorage.setItem('currentUser', JSON.stringify(user));
+        if (isPlatformBrowser(this.platformId)) {
+          localStorage.setItem('currentUser', JSON.stringify(user));
+        }
         return user;
       })
     );
@@ -46,22 +60,31 @@ export class AuthService {
     return this.http.post<{ token: string }>(`${environment.apiUrl}/auth/register`, {
       username: data.email, // Mapping email to username
       email: data.email,
+      firstName: data.firstName,
+      lastName: data.lastName,
       password: data.password,
       role: 'User'
     }).pipe(
       map(response => {
         const token = response.token;
         const decoded = this.decodeToken(token);
+        
+        const roleClaim = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || decoded.role || 'User';
+        const givenName = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'] || data.firstName;
+        const surname = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname'] || data.lastName;
+
         const user: UserDTO = {
           id: decoded.nameid || '0',
           email: data.email,
-          role: 'User',
-          firstName: data.firstName,
-          lastName: data.lastName,
+          role: roleClaim,
+          firstName: givenName,
+          lastName: surname,
           token: token
         };
         this.currentUserSubject.next(user);
-        localStorage.setItem('currentUser', JSON.stringify(user));
+        if (isPlatformBrowser(this.platformId)) {
+          localStorage.setItem('currentUser', JSON.stringify(user));
+        }
         return user;
       })
     );
@@ -76,7 +99,9 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('currentUser');
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('currentUser');
+    }
     this.currentUserSubject.next(null);
   }
 
