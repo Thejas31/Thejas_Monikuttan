@@ -1,0 +1,52 @@
+<div class="min-h-screen flex items-center justify-center bg-dark-bg relative overflow-hidden py-10">
+  <!-- Decorative background elements -->
+  <div class="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-primary/20 blur-[120px]"></div>
+  <div class="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-dark-blue/40 blur-[120px]"></div>
+
+  <div class="w-full max-w-md p-8 glass-card z-10 mx-4">
+    <h2 class="text-3xl font-bold text-center text-white mb-2">Create Account</h2>
+    <p class="text-center text-slate-400 mb-8 text-sm">Join to make secure donations</p>
+
+    <div *ngIf="error" class="mb-4 p-3 rounded bg-status-danger/20 border border-status-danger/50 text-status-danger text-sm text-center">
+      {{error}}
+    </div>
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="grid grid-cols-2 gap-4 mb-5">
+        <div>
+          <label class="block text-slate-300 text-sm font-medium mb-2">First Name</label>
+          <input type="text" [(ngModel)]="firstName" name="firstName" class="input-field" placeholder="John" required>
+        </div>
+        <div>
+          <label class="block text-slate-300 text-sm font-medium mb-2">Last Name</label>
+          <input type="text" [(ngModel)]="lastName" name="lastName" class="input-field" placeholder="Smith" required>
+        </div>
+      </div>
+
+      <div class="mb-5">
+        <label class="block text-slate-300 text-sm font-medium mb-2">Email Address</label>
+        <input type="email" [(ngModel)]="email" name="email" class="input-field" placeholder="john.smith@example.com" required>
+      </div>
+
+      <div class="mb-5">
+        <label class="block text-slate-300 text-sm font-medium mb-2">Password</label>
+        <input type="password" [(ngModel)]="password" name="password" class="input-field" placeholder="Create a password" required>
+      </div>
+
+      <div class="mb-8">
+        <label class="block text-slate-300 text-sm font-medium mb-2">Confirm Password</label>
+        <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" class="input-field" placeholder="Confirm your password" required>
+      </div>
+
+      <button type="submit" class="btn-primary mb-6" [disabled]="isLoading">
+        {{ isLoading ? 'Creating Account...' : 'Register' }}
+      </button>
+
+      <div class="text-center">
+        <div class="pt-4 border-t border-slate-700/50">
+          <p class="text-sm text-slate-300">Already have an account? <a routerLink="/login" class="text-primary hover:text-primary-dark font-medium">Sign In</a></p>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
