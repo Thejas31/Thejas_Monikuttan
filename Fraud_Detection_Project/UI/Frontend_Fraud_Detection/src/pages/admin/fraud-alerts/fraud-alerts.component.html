@@ -1,0 +1,144 @@
+<div class="flex min-h-screen bg-dark-bg">
+  <app-sidebar></app-sidebar>
+
+  <main class="flex-1 ml-64 p-8">
+
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-2xl font-bold text-white">Fraud Alerts</h1>
+      <p class="text-slate-400 text-sm mt-1">Review and manage all flagged donation transactions.</p>
+    </div>
+
+    <!-- Filters Bar -->
+    <div class="glass-card p-4 mb-6 flex flex-wrap items-center gap-4">
+
+      <!-- Search -->
+      <div class="flex-1 min-w-[200px] relative">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()"
+          placeholder="Search by donor or ID..."
+          class="w-full pl-9 pr-4 py-2 bg-dark-bg/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+      </div>
+
+      <!-- Status Filter -->
+      <div class="flex items-center gap-2">
+        <span class="text-slate-400 text-xs">Status:</span>
+        <div class="flex rounded-xl overflow-hidden border border-slate-700">
+          <button *ngFor="let s of ['All', 'Pending', 'Resolved']"
+            (click)="setStatusFilter(s as any)"
+            [ngClass]="statusFilter === s ? 'bg-primary text-white' : 'text-slate-400 hover:text-white'"
+            class="px-3 py-1.5 text-xs font-medium transition-all duration-200">
+            {{ s }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Risk Filter -->
+      <div class="flex items-center gap-2">
+        <span class="text-slate-400 text-xs">Risk:</span>
+        <div class="flex rounded-xl overflow-hidden border border-slate-700">
+          <button *ngFor="let r of ['All', 'High', 'Medium', 'Low']"
+            (click)="setRiskFilter(r as any)"
+            [ngClass]="riskFilter === r ? 'bg-primary text-white' : 'text-slate-400 hover:text-white'"
+            class="px-3 py-1.5 text-xs font-medium transition-all duration-200">
+            {{ r }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Count -->
+      <span class="ml-auto text-slate-400 text-sm">
+        <span class="text-white font-medium">{{ filteredAlerts.length }}</span> alerts
+      </span>
+    </div>
+
+    <!-- Alerts Table -->
+    <div class="glass-card overflow-hidden">
+
+      <!-- Loading -->
+      <div *ngIf="isLoading" class="flex items-center justify-center py-20">
+        <div class="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+      </div>
+
+      <!-- Table -->
+      <div *ngIf="!isLoading && filteredAlerts.length > 0" class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b border-slate-700/50">
+              <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-3">Donation ID</th>
+              <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-3">Donor</th>
+              <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-3">Amount</th>
+              <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-3">Risk Score</th>
+              <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-3">Reason</th>
+              <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-3">IP / Country</th>
+              <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-3">Status</th>
+              <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-3">Action</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-700/30">
+            <tr *ngFor="let alert of filteredAlerts" class="hover:bg-slate-800/30 transition-colors duration-150 group">
+              <td class="px-6 py-4 text-sm text-primary font-mono font-medium">{{ alert.donationId }}</td>
+              <td class="px-6 py-4">
+                <p class="text-white text-sm font-medium">{{ alert.donorName }}</p>
+                <p class="text-slate-500 text-xs">{{ alert.date }}</p>
+              </td>
+              <td class="px-6 py-4 text-white text-sm font-semibold">₹{{ alert.amount | number }}</td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2">
+                  <div class="w-16 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                    <div class="h-full rounded-full transition-all"
+                      [ngClass]="alert.riskScore >= 80 ? 'bg-status-danger' : alert.riskScore >= 60 ? 'bg-status-warning' : 'bg-status-success'"
+                      [style.width.%]="alert.riskScore"></div>
+                  </div>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-bold border"
+                    [ngClass]="getRiskBadgeClass(alert.riskScore)">
+                    {{ alert.riskScore }}%
+                  </span>
+                </div>
+              </td>
+              <td class="px-6 py-4 max-w-[200px]">
+                <p class="text-slate-300 text-xs leading-relaxed truncate" [title]="alert.reason">{{ alert.reason }}</p>
+              </td>
+              <td class="px-6 py-4">
+                <p class="text-slate-300 text-xs font-mono">{{ alert.ipAddress }}</p>
+                <p class="text-slate-500 text-xs">{{ alert.country }}</p>
+              </td>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium border"
+                  [ngClass]="getStatusClass(alert.status)">
+                  {{ alert.status }}
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <button (click)="openReview(alert)"
+                  class="text-xs font-medium text-primary hover:text-white bg-primary/10 hover:bg-primary px-3 py-1.5 rounded-lg border border-primary/30 hover:border-primary transition-all duration-200">
+                  Review
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!isLoading && filteredAlerts.length === 0" class="text-center py-20">
+        <svg class="w-12 h-12 text-slate-600 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p class="text-slate-500 text-sm">No alerts match your current filters.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Review Modal -->
+  <app-review-modal
+    *ngIf="selectedAlert"
+    [alert]="selectedAlert"
+    (close)="onModalClose()"
+    (reviewed)="onReviewed()">
+  </app-review-modal>
+</div>
