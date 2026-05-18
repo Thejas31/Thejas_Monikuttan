@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { DonationDTO, CampaignDTO } from '../models/donation.dto';
+import { DonationDTO, CampaignDTO, MyDonationDTO } from '../models/donation.dto';
 import { environment } from '../environments/environment';
 import { map } from 'rxjs/operators';
 
@@ -13,6 +13,10 @@ export class DonationService {
 
   getCampaigns(): Observable<CampaignDTO[]> {
     return this.http.get<CampaignDTO[]>(`${environment.apiUrl}/campaigns`);
+  }
+
+  getUserDonations(userId: string): Observable<MyDonationDTO[]> {
+    return this.http.get<MyDonationDTO[]>(`${environment.apiUrl}/donations/user/${userId}`);
   }
 
   createCampaign(campaign: { title: string, description: string, targetAmount: number }): Observable<any> {

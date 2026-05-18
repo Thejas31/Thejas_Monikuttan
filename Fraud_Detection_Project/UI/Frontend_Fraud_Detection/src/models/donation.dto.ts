@@ -18,4 +18,16 @@ export interface CampaignDTO {
   title: string;
   description?: string;
   targetAmount?: number;
+  totalAmountRaised?: number;
+}
+
+export interface MyDonationDTO {
+  id: number;
+  amount: number;
+  timestamp: string;
+  campaignId: number;
+  campaignTitle: string;
+  isFlagged: boolean;
+  fraudReason?: string;
+  riskLevel?: string;
 }

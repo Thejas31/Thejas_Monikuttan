@@ -1,134 +1,300 @@
-<div class="flex min-h-screen bg-dark-bg">
-  <app-sidebar></app-sidebar>
-
-  <main class="flex-1 ml-64 p-8 flex items-start justify-center">
-    <div class="w-full max-w-2xl">
-
-      <!-- Header -->
-      <div class="mb-8">
-        <h1 class="text-2xl font-bold text-white">Make a Donation</h1>
-        <p class="text-slate-400 text-sm mt-1">Your contribution is protected by our AI fraud detection system.</p>
-      </div>
-
-      <!-- Security Notice -->
-      <div class="flex items-center gap-3 p-4 mb-6 rounded-xl bg-primary/10 border border-primary/30">
-        <svg class="w-5 h-5 text-primary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-        </svg>
-        <p class="text-sm text-primary">This transaction is secured with AES-256 encryption and AI fraud monitoring.</p>
-      </div>
-
-      <!-- Success Message -->
-      <div *ngIf="successMessage"
-        class="mb-6 p-4 rounded-xl bg-status-success/10 border border-status-success/30 text-status-success text-sm">
-        {{ successMessage }}
-      </div>
-
-      <!-- Error Message -->
-      <div *ngIf="errorMessage"
-        class="mb-6 p-4 rounded-xl bg-status-danger/10 border border-status-danger/30 text-status-danger text-sm">
-        {{ errorMessage }}
-      </div>
-
-      <!-- Form Card -->
-      <div class="glass-card p-7 space-y-6">
-
-        <!-- Campaign -->
-        <div>
-          <label class="block text-slate-300 text-sm font-medium mb-2">
-            Campaign <span class="text-status-danger">*</span>
-          </label>
-          <select [(ngModel)]="donation.campaignId" name="campaignId"
-            class="w-full px-4 py-3 bg-dark-bg/50 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-white text-sm transition-all">
-            <option value="" disabled>Select a campaign to support...</option>
-            <option *ngFor="let c of campaigns" [value]="c.id">{{ c.title }}</option>
-          </select>
-        </div>
-
-        <!-- Preset Amounts -->
-        <div>
-          <label class="block text-slate-300 text-sm font-medium mb-3">
-            Donation Amount (₹) <span class="text-status-danger">*</span>
-          </label>
-          <div class="grid grid-cols-5 gap-2 mb-3">
-            <button *ngFor="let preset of presetAmounts"
-              (click)="selectAmount(preset)"
-              [ngClass]="donation.amount === preset
-                ? 'bg-primary border-primary text-white shadow-lg shadow-primary/20'
-                : 'border-slate-600 text-slate-300 hover:border-primary/50 hover:text-primary'"
-              class="py-2 text-sm font-semibold border rounded-xl transition-all duration-200">
-              {{ preset | number }}
-            </button>
+<div class="flex flex-col min-h-screen bg-dark-bg">
+  
+  <!-- Top Navbar -->
+  <nav class="sticky top-0 z-50 bg-dark-bg/80 backdrop-blur-md border-b border-slate-700/50">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex items-center justify-between h-16">
+        
+        <!-- Left: Branding & Tabs -->
+        <div class="flex items-center gap-8">
+          <!-- Logo -->
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
+              <svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <span class="text-white font-bold text-lg tracking-wide">SecureGive</span>
           </div>
-          <input type="number" [(ngModel)]="donation.amount" name="amount" min="1"
-            placeholder="Or enter custom amount..."
-            class="w-full px-4 py-3 bg-dark-bg/50 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-white placeholder-slate-500 text-sm transition-all">
-        </div>
 
-        <!-- Payment Method -->
-        <div>
-          <label class="block text-slate-300 text-sm font-medium mb-3">Payment Method</label>
-          <div class="grid grid-cols-2 gap-3">
-            <button *ngFor="let method of paymentMethods"
-              (click)="donation.paymentMethod = method"
-              [ngClass]="donation.paymentMethod === method
-                ? 'border-primary bg-primary/10 text-primary'
-                : 'border-slate-600 text-slate-300 hover:border-slate-500'"
-              class="flex items-center gap-2 px-4 py-3 border rounded-xl text-sm font-medium transition-all duration-200">
-              <span *ngIf="method === 'Credit Card'">💳</span>
-              <span *ngIf="method === 'Debit Card'">🏦</span>
-              <span *ngIf="method === 'Bank Transfer'">🔁</span>
-              <span *ngIf="method === 'UPI'">📱</span>
-              {{ method }}
+          <!-- Tabs -->
+          <div class="flex items-baseline space-x-1">
+            <button (click)="setActiveTab('dashboard')"
+              [ngClass]="activeTab === 'dashboard' ? 'bg-slate-800 text-white' : 'text-slate-300 hover:bg-slate-800/50 hover:text-white'"
+              class="px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+              Dashboard
+            </button>
+            <button (click)="setActiveTab('make-donations')"
+              [ngClass]="activeTab === 'make-donations' ? 'bg-slate-800 text-white' : 'text-slate-300 hover:bg-slate-800/50 hover:text-white'"
+              class="px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+              Make Donations
+            </button>
+            <button (click)="setActiveTab('my-donations')"
+              [ngClass]="activeTab === 'my-donations' ? 'bg-slate-800 text-white' : 'text-slate-300 hover:bg-slate-800/50 hover:text-white'"
+              class="px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+              My Donations
             </button>
           </div>
         </div>
 
-        <!-- Donor Name -->
-        <div>
-          <label class="block text-slate-300 text-sm font-medium mb-2">
-            Your Name <span class="text-status-danger">*</span>
-          </label>
-          <input type="text" [(ngModel)]="donation.donorName" name="donorName"
-            placeholder="Full name"
-            class="w-full px-4 py-3 bg-dark-bg/50 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-white placeholder-slate-500 text-sm transition-all">
-        </div>
-
-        <!-- Anonymous Toggle -->
-        <div class="flex items-center justify-between p-4 bg-slate-800/50 rounded-xl">
-          <div>
-            <p class="text-slate-200 text-sm font-medium">Donate Anonymously</p>
-            <p class="text-slate-400 text-xs mt-0.5">Your name won't be shown publicly</p>
+        <!-- Right: User Details -->
+        <div class="flex items-center gap-4">
+          <div class="text-right hidden sm:block">
+            <p class="text-sm font-medium text-white">{{ userFullName }}</p>
+            <p class="text-xs text-slate-400">{{ userEmail }}</p>
           </div>
-          <button (click)="donation.anonymous = !donation.anonymous"
-            [ngClass]="donation.anonymous ? 'bg-primary' : 'bg-slate-600'"
-            class="relative w-11 h-6 rounded-full transition-colors duration-200 focus:outline-none">
-            <span class="block w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 absolute top-1"
-              [ngClass]="donation.anonymous ? 'translate-x-6' : 'translate-x-1'">
-            </span>
+          <div class="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center">
+            <span class="text-white font-bold">{{ userFullName.charAt(0) }}</span>
+          </div>
+          <button (click)="logout()" class="text-slate-400 hover:text-white transition-colors ml-2 p-2">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
           </button>
         </div>
-
-        <!-- Message -->
-        <div>
-          <label class="block text-slate-300 text-sm font-medium mb-2">Message (Optional)</label>
-          <textarea [(ngModel)]="donation.message" rows="3" name="message"
-            placeholder="Leave a message of support..."
-            class="w-full px-4 py-3 bg-dark-bg/50 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-white placeholder-slate-500 text-sm resize-none transition-all">
-          </textarea>
-        </div>
-
-        <!-- Submit -->
-        <button (click)="onSubmit()" [disabled]="isSubmitting"
-          class="w-full py-3.5 px-6 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-dark hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg shadow-primary/25 transition-all duration-300 text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-          <svg *ngIf="isSubmitting" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-          </svg>
-          {{ isSubmitting ? 'Processing...' : '🔒 Donate Securely' }}
-        </button>
       </div>
     </div>
+  </nav>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-6 md:p-8">
+    
+    <!-- Success/Error Messages -->
+    <div *ngIf="successMessage" class="mb-6 p-4 rounded-xl bg-status-success/10 border border-status-success/30 text-status-success text-sm flex items-center justify-between">
+      {{ successMessage }}
+      <button (click)="successMessage = ''" class="text-status-success hover:text-white">✕</button>
+    </div>
+    <div *ngIf="errorMessage" class="mb-6 p-4 rounded-xl bg-status-danger/10 border border-status-danger/30 text-status-danger text-sm flex items-center justify-between">
+      {{ errorMessage }}
+      <button (click)="errorMessage = ''" class="text-status-danger hover:text-white">✕</button>
+    </div>
+
+    <!-- ================= DASHBOARD TAB ================= -->
+    <div *ngIf="activeTab === 'dashboard'" class="animate-fade-in space-y-6">
+      <div class="mb-8">
+        <h1 class="text-2xl font-bold text-white">Welcome back, {{ userFullName.split(' ')[0] }}!</h1>
+        <p class="text-slate-400 text-sm mt-1">Here is a summary of your contribution to our campaigns.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="glass-card p-6 flex items-center gap-5 hover:border-primary/40 transition-colors">
+          <div class="w-14 h-14 rounded-2xl bg-primary/15 flex items-center justify-center">
+            <svg class="w-7 h-7 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-slate-400 text-sm mb-1">Total Amount Donated</p>
+            <p class="text-white text-3xl font-bold">₹{{ totalDonated | number }}</p>
+          </div>
+        </div>
+
+        <div class="glass-card p-6 flex items-center gap-5 hover:border-blue-500/40 transition-colors">
+          <div class="w-14 h-14 rounded-2xl bg-blue-500/15 flex items-center justify-center">
+            <svg class="w-7 h-7 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-slate-400 text-sm mb-1">Campaigns Supported</p>
+            <p class="text-white text-3xl font-bold">{{ totalCampaignsSupported }}</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Recent Activity preview could go here -->
+    </div>
+
+    <!-- ================= MAKE DONATIONS TAB ================= -->
+    <div *ngIf="activeTab === 'make-donations'" class="animate-fade-in">
+      
+      <!-- List of Campaigns -->
+      <div *ngIf="!selectedCampaign">
+        <div class="mb-8">
+          <h1 class="text-2xl font-bold text-white">Active Campaigns</h1>
+          <p class="text-slate-400 text-sm mt-1">Select a campaign to make a secure contribution.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div *ngFor="let c of campaigns" class="glass-card flex flex-col hover:border-primary/40 transition-all duration-300 hover:-translate-y-1">
+            <div class="p-6 flex-1">
+              <h3 class="text-white font-bold text-xl mb-2">{{ c.title }}</h3>
+              <p class="text-slate-400 text-sm line-clamp-3 mb-4">{{ c.description || 'No description provided.' }}</p>
+              
+              <div class="space-y-2 mt-auto">
+                <div class="flex justify-between text-xs">
+                  <span class="text-slate-300">Raised: <strong class="text-white">₹{{ (c.totalAmountRaised || 0) | number }}</strong></span>
+                  <span class="text-slate-300">Target: <strong class="text-white">₹{{ c.targetAmount | number }}</strong></span>
+                </div>
+                <!-- Progress Bar -->
+                <div class="w-full bg-slate-800 rounded-full h-1.5">
+                  <div class="bg-primary h-1.5 rounded-full" [style.width.%]="c.targetAmount ? Math.min(100, ((c.totalAmountRaised || 0) / c.targetAmount) * 100) : 0"></div>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 border-t border-slate-700/50">
+              <button (click)="selectCampaign(c)" class="w-full py-2.5 rounded-lg bg-primary/10 hover:bg-primary text-primary hover:text-white text-sm font-medium border border-primary/20 hover:border-primary transition-all">
+                Donate Now
+              </button>
+            </div>
+          </div>
+          
+          <div *ngIf="campaigns.length === 0" class="col-span-full py-12 text-center text-slate-500 glass-card">
+            No active campaigns available at the moment.
+          </div>
+        </div>
+      </div>
+
+      <!-- Donation Form for Selected Campaign -->
+      <div *ngIf="selectedCampaign" class="max-w-2xl mx-auto">
+        
+        <button (click)="selectedCampaign = null" class="flex items-center gap-2 text-slate-400 hover:text-white mb-6 transition-colors text-sm font-medium">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          Back to Campaigns
+        </button>
+
+        <div class="glass-card p-8 space-y-8">
+          
+          <!-- Campaign Summary -->
+          <div class="pb-6 border-b border-slate-700/50">
+            <h2 class="text-2xl font-bold text-white mb-2">{{ selectedCampaign.title }}</h2>
+            <div class="flex items-center gap-6 text-sm">
+              <div>
+                <p class="text-slate-400">Target</p>
+                <p class="text-white font-medium">₹{{ selectedCampaign.targetAmount | number }}</p>
+              </div>
+              <div>
+                <p class="text-slate-400">Total Raised</p>
+                <p class="text-primary font-medium">₹{{ (selectedCampaign.totalAmountRaised || 0) | number }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Amount Selection -->
+          <div>
+            <label class="block text-slate-300 text-sm font-medium mb-4">
+              Select Donation Amount (₹) <span class="text-status-danger">*</span>
+            </label>
+            
+            <div class="flex items-center gap-4 mb-4">
+              <input type="range" [(ngModel)]="donation.amount" min="1" [max]="selectedCampaign.targetAmount || 100000" step="100"
+                class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-primary">
+            </div>
+            
+            <div class="relative">
+              <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">₹</span>
+              <input type="number" [(ngModel)]="donation.amount" name="amount" min="1"
+                class="w-full pl-8 pr-4 py-3.5 bg-dark-bg/50 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-white text-lg font-medium transition-all">
+            </div>
+          </div>
+
+          <!-- Payment Method -->
+          <div>
+            <label class="block text-slate-300 text-sm font-medium mb-3">Payment Method</label>
+            <div class="grid grid-cols-2 gap-3">
+              <button *ngFor="let method of paymentMethods"
+                (click)="donation.paymentMethod = method"
+                [ngClass]="donation.paymentMethod === method
+                  ? 'border-primary bg-primary/10 text-primary'
+                  : 'border-slate-600 text-slate-300 hover:border-slate-500'"
+                class="flex items-center gap-2 px-4 py-3 border rounded-xl text-sm font-medium transition-all duration-200">
+                <span *ngIf="method === 'Credit Card'">💳</span>
+                <span *ngIf="method === 'Debit Card'">🏦</span>
+                <span *ngIf="method === 'Bank Transfer'">🔁</span>
+                <span *ngIf="method === 'UPI'">📱</span>
+                {{ method }}
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Donor Name -->
+            <div>
+              <label class="block text-slate-300 text-sm font-medium mb-2">
+                Your Name <span class="text-status-danger">*</span>
+              </label>
+              <input type="text" [(ngModel)]="donation.donorName" name="donorName"
+                class="w-full px-4 py-3 bg-dark-bg/50 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-white text-sm transition-all">
+            </div>
+
+            <!-- Anonymous Toggle -->
+            <div>
+              <label class="block text-slate-300 text-sm font-medium mb-2">Visibility</label>
+              <div class="flex items-center justify-between px-4 py-2.5 bg-dark-bg/50 border border-slate-600 rounded-xl">
+                <span class="text-slate-300 text-sm">Donate Anonymously</span>
+                <button (click)="donation.anonymous = !donation.anonymous"
+                  [ngClass]="donation.anonymous ? 'bg-primary' : 'bg-slate-600'"
+                  class="relative w-11 h-6 rounded-full transition-colors duration-200 focus:outline-none">
+                  <span class="block w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 absolute top-1"
+                    [ngClass]="donation.anonymous ? 'translate-x-6' : 'translate-x-1'">
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <button (click)="onSubmit()" [disabled]="isSubmitting"
+            class="w-full py-4 px-6 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-dark hover:to-blue-700 text-white font-bold rounded-xl shadow-lg shadow-primary/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+            <svg *ngIf="isSubmitting" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+            </svg>
+            <svg *ngIf="!isSubmitting" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            {{ isSubmitting ? 'Processing Securely...' : 'Complete Donation' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= MY DONATIONS TAB ================= -->
+    <div *ngIf="activeTab === 'my-donations'" class="animate-fade-in">
+      <div class="mb-8">
+        <h1 class="text-2xl font-bold text-white">Donation History</h1>
+        <p class="text-slate-400 text-sm mt-1">Review your past contributions and their security status.</p>
+      </div>
+
+      <div class="glass-card overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="border-b border-slate-700/50 bg-slate-800/20">
+                <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-4">Date</th>
+                <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-4">Campaign</th>
+                <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-4">Amount</th>
+                <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-4">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-700/30">
+              <tr *ngFor="let d of myDonations" class="hover:bg-slate-800/30 transition-colors">
+                <td class="px-6 py-4 text-slate-300 text-sm">{{ d.timestamp | date:'mediumDate' }}</td>
+                <td class="px-6 py-4 text-white font-medium">{{ d.campaignTitle }}</td>
+                <td class="px-6 py-4 text-white font-medium">₹{{ d.amount | number }}</td>
+                <td class="px-6 py-4">
+                  <span *ngIf="!d.isFlagged" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-status-success/20 text-status-success border border-status-success/30">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Successful
+                  </span>
+                  <span *ngIf="d.isFlagged" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-status-warning/20 text-status-warning border border-status-warning/30" title="{{ d.fraudReason }}">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    Under Review
+                  </span>
+                </td>
+              </tr>
+              <tr *ngIf="myDonations.length === 0">
+                <td colspan="4" class="px-6 py-12 text-center text-slate-500">
+                  You haven't made any donations yet.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </main>
 </div>
