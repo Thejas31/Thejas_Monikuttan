@@ -12,12 +12,14 @@ export class DonationService {
   constructor(private http: HttpClient) {}
 
   getCampaigns(): Observable<CampaignDTO[]> {
-    // Assuming backend has a campaigns endpoint. Adjust if different.
     return this.http.get<CampaignDTO[]>(`${environment.apiUrl}/campaigns`);
   }
 
+  createCampaign(campaign: { title: string, description: string, targetAmount: number }): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/campaigns`, campaign);
+  }
+
   submitDonation(donation: DonationDTO): Observable<{success: boolean, message: string}> {
-    // Map Frontend DTO to Backend CreateDonationDto
     const backendDto = {
       campaignId: parseInt(donation.campaignId, 10),
       amount: donation.amount

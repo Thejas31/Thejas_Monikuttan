@@ -6,11 +6,14 @@ import { AuthService } from '../../../services/auth.service';
 import { AlertDTO, DashboardStatsDTO } from '../../../models/alert.dto';
 import { SidebarComponent } from '../../../components/sidebar/sidebar.component';
 import { ReviewModalComponent } from '../../../components/review-modal/review-modal.component';
+import { CreateCampaignModalComponent } from '../../../components/create-campaign-modal/create-campaign-modal.component';
+import { DonationService } from '../../../services/donation.service';
+import { CampaignDTO } from '../../../models/donation.dto';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, SidebarComponent, ReviewModalComponent],
+  imports: [CommonModule, RouterModule, SidebarComponent, ReviewModalComponent, CreateCampaignModalComponent],
   templateUrl: './admin-dashboard.component.html',
 })
 export class AdminDashboardComponent implements OnInit {
@@ -19,9 +22,14 @@ export class AdminDashboardComponent implements OnInit {
   selectedAlert: AlertDTO | null = null;
   isLoading = true;
 
+  campaigns: CampaignDTO[] = [];
+  isCampaignsDummy = false;
+  showCreateCampaignModal = false;
+
   constructor(
     private fraudService: FraudService,
-    private authService: AuthService
+    private authService: AuthService,
+    private donationService: DonationService
   ) {}
 
   ngOnInit() {
@@ -33,6 +41,36 @@ export class AdminDashboardComponent implements OnInit {
       this.alerts = alerts;
       this.isLoading = false;
     });
+
+    this.loadCampaigns();
+  }
+
+  loadCampaigns() {
+    this.donationService.getCampaigns().subscribe(c => {
+      if (!c || c.length === 0) {
+        this.isCampaignsDummy = true;
+        this.campaigns = [
+          { id: 'dummy-1', title: 'Save the Amazon Rainforest', description: 'Help us plant trees and protect wildlife.', targetAmount: 50000 },
+          { id: 'dummy-2', title: 'Clean Water Initiative', description: 'Providing clean water to remote villages.', targetAmount: 25000 }
+        ];
+      } else {
+        this.isCampaignsDummy = false;
+        this.campaigns = c;
+      }
+    });
+  }
+
+  openCreateCampaign() {
+    this.showCreateCampaignModal = true;
+  }
+
+  closeCreateCampaign() {
+    this.showCreateCampaignModal = false;
+  }
+
+  onCampaignCreated() {
+    this.showCreateCampaignModal = false;
+    this.loadCampaigns();
   }
 
   openReview(alert: AlertDTO) {

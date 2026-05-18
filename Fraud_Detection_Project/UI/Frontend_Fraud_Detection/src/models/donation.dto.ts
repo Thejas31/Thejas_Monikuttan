@@ -15,5 +15,7 @@ export interface DonationDTO {
 
 export interface CampaignDTO {
   id: string;
-  name: string;
+  title: string;
+  description?: string;
+  targetAmount?: number;
 }

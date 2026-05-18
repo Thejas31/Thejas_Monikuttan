@@ -5,9 +5,18 @@
   <main class="flex-1 ml-64 p-8">
 
     <!-- Header -->
-    <div class="mb-8">
-      <h1 class="text-2xl font-bold text-white">Fraud Detection Dashboard</h1>
-      <p class="text-slate-400 text-sm mt-1">Real-time monitoring of donation activity and fraud signals.</p>
+    <div class="mb-8 flex justify-between items-end">
+      <div>
+        <h1 class="text-2xl font-bold text-white">Fraud Detection Dashboard</h1>
+        <p class="text-slate-400 text-sm mt-1">Real-time monitoring of donation activity and fraud signals.</p>
+      </div>
+      <button (click)="openCreateCampaign()"
+        class="bg-primary hover:bg-primary-dark text-white text-sm font-medium py-2 px-4 rounded-xl shadow-lg shadow-primary/20 transition-all duration-200 flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        Create Campaign
+      </button>
     </div>
 
     <!-- Stats Cards -->
@@ -139,6 +148,34 @@
         No fraud alerts found.
       </div>
     </div>
+
+    <!-- Active Campaigns -->
+    <div class="glass-card overflow-hidden mt-8">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-slate-700/50">
+        <div>
+          <h2 class="text-white font-semibold flex items-center gap-2">
+            Active Campaigns
+            <span *ngIf="isCampaignsDummy" class="px-2 py-0.5 rounded-md bg-status-warning/20 text-status-warning text-[10px] uppercase font-bold tracking-wider border border-status-warning/30">
+              Dummy Data
+            </span>
+          </h2>
+          <p class="text-slate-400 text-xs mt-0.5" *ngIf="!isCampaignsDummy">Currently running fundraising campaigns</p>
+          <p class="text-status-warning/80 text-xs mt-0.5" *ngIf="isCampaignsDummy">No real campaigns found. Showing dummy values for representation.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-6">
+        <div *ngFor="let c of campaigns" class="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-5 hover:border-primary/40 transition-colors group">
+          <div class="flex justify-between items-start mb-3">
+            <h3 class="text-white font-medium text-lg group-hover:text-primary transition-colors">{{ c.title }}</h3>
+            <span class="bg-primary/10 text-primary text-xs font-bold px-2.5 py-1 rounded-lg border border-primary/20">
+              ₹{{ c.targetAmount | number }}
+            </span>
+          </div>
+          <p class="text-slate-400 text-sm line-clamp-2">{{ c.description || 'No description provided.' }}</p>
+        </div>
+      </div>
+    </div>
   </main>
 
   <!-- Review Modal -->
@@ -148,4 +185,11 @@
     (close)="onModalClose()"
     (reviewed)="onReviewed()">
   </app-review-modal>
+
+  <!-- Create Campaign Modal -->
+  <app-create-campaign-modal
+    *ngIf="showCreateCampaignModal"
+    (close)="closeCreateCampaign()"
+    (created)="onCampaignCreated()">
+  </app-create-campaign-modal>
 </div>

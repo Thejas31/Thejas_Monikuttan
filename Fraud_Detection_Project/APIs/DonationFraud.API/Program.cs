@@ -180,6 +180,22 @@ using (var scope = app.Services.CreateScope())
         );
         dbContext.SaveChanges();
     }
+
+    var userRepo = scope.ServiceProvider.GetRequiredService<IUserRepository>();
+    var adminExists = await userRepo.GetUserByUsernameAsync("admin@mail.com");
+    if (adminExists == null)
+    {
+        var authService = scope.ServiceProvider.GetRequiredService<IAuthService>();
+        await authService.RegisterAsync(new DonationFraud.API.DTOs.RegisterRequestDto
+        {
+            Username = "admin@mail.com",
+            Email = "admin@mail.com",
+            FirstName = "System",
+            LastName = "Admin",
+            Password = "admin",
+            Role = "Admin"
+        });
+    }
 }
 
 app.Run();

@@ -1,0 +1,71 @@
+<!-- Create Campaign Modal -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" (click)="onClose()"></div>
+
+  <!-- Modal Card -->
+  <div class="relative w-full max-w-lg glass-card p-0 overflow-hidden animate-fade-in">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-700/50 bg-dark-bg/40">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center bg-primary/20">
+          <svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-white font-semibold text-base">Create Campaign</h3>
+          <p class="text-slate-400 text-xs">Setup a new fundraising campaign</p>
+        </div>
+      </div>
+      <button (click)="onClose()" class="text-slate-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-slate-700/50">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="mx-6 mt-4 p-3 rounded-xl bg-status-danger/10 border border-status-danger/30 text-status-danger text-sm">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Form Details -->
+    <div class="px-6 py-4 space-y-4">
+      <!-- Title -->
+      <div>
+        <label class="block text-slate-300 text-sm font-medium mb-2">Campaign Title <span class="text-status-danger">*</span></label>
+        <input type="text" [(ngModel)]="campaign.title" name="title" placeholder="e.g. Save the Forest"
+          class="w-full px-4 py-2.5 bg-slate-800/70 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-white text-sm placeholder-slate-500 transition-all">
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label class="block text-slate-300 text-sm font-medium mb-2">Description <span class="text-status-danger">*</span></label>
+        <textarea [(ngModel)]="campaign.description" name="description" rows="3" placeholder="Briefly describe the campaign's goals..."
+          class="w-full px-4 py-2.5 bg-slate-800/70 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-white text-sm placeholder-slate-500 resize-none transition-all">
+        </textarea>
+      </div>
+
+      <!-- Target Amount -->
+      <div>
+        <label class="block text-slate-300 text-sm font-medium mb-2">Target Amount (₹) <span class="text-status-danger">*</span></label>
+        <input type="number" [(ngModel)]="campaign.targetAmount" name="targetAmount" min="1" placeholder="e.g. 50000"
+          class="w-full px-4 py-2.5 bg-slate-800/70 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-white text-sm placeholder-slate-500 transition-all">
+      </div>
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="flex gap-3 px-6 py-4 border-t border-slate-700/50 bg-dark-bg/40">
+      <button (click)="onClose()"
+        class="flex-1 py-2.5 px-4 rounded-xl border border-slate-600 text-slate-300 hover:bg-slate-700/50 hover:text-white text-sm font-medium transition-all duration-200">
+        Cancel
+      </button>
+      <button (click)="onSubmit()" [disabled]="isSubmitting"
+        class="flex-1 py-2.5 px-4 rounded-xl bg-primary hover:bg-primary-dark text-white text-sm font-medium shadow-lg shadow-primary/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+        {{ isSubmitting ? 'Creating...' : 'Create Campaign' }}
+      </button>
+    </div>
+  </div>
+</div>
