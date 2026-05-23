@@ -1,5 +1,6 @@
 // src/models/alert.dto.ts
 export interface AlertDTO {
+  id: string;
   donationId: string;
   donorName: string;
   amount: number;

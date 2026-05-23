@@ -19,6 +19,17 @@ export interface CampaignDTO {
   description?: string;
   targetAmount?: number;
   totalAmountRaised?: number;
+  isActive?: boolean;
+  donations?: CampaignDonationDTO[];
+}
+
+export interface CampaignDonationDTO {
+  id: number;
+  amount: number;
+  timestamp: string;
+  donorName: string;
+  donorEmail: string;
+  isApproved?: boolean | null;
 }
 
 export interface MyDonationDTO {

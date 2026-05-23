@@ -35,6 +35,7 @@ namespace DonationFraud.API.Entities
         public string Description { get; set; } = string.Empty;
         public decimal TargetAmount { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public bool IsActive { get; set; } = true;
 
         public ICollection<Donation> Donations { get; set; } = new List<Donation>();
     }

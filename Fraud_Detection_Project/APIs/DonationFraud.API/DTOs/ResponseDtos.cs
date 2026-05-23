@@ -14,6 +14,18 @@ namespace DonationFraud.API.DTOs
         public DateTime CreatedAt { get; set; }
         public int TotalDonations { get; set; }
         public decimal TotalAmountRaised { get; set; }
+        public bool IsActive { get; set; }
+        public List<CampaignDonationDto> Donations { get; set; } = new();
+    }
+
+    public class CampaignDonationDto
+    {
+        public int Id { get; set; }
+        public decimal Amount { get; set; }
+        public DateTime Timestamp { get; set; }
+        public string DonorName { get; set; } = string.Empty;
+        public string DonorEmail { get; set; } = string.Empty;
+        public bool? IsApproved { get; set; }
     }
 
     // ====== Donation Response DTOs ======
@@ -50,6 +62,11 @@ namespace DonationFraud.API.DTOs
         // Donor info (flattened)
         public int DonorUserId { get; set; }
         public string DonorUsername { get; set; } = string.Empty;
+
+        // Visual metadata for Fraud Alerts Tracking
+        public string IpAddress { get; set; } = string.Empty;
+        public string Country { get; set; } = string.Empty;
+        public string PaymentMethod { get; set; } = string.Empty;
     }
 
     // ====== User Summary DTO (for embedding in other responses) ======

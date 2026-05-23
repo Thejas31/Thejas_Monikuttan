@@ -24,17 +24,18 @@ export class FraudService {
     return this.http.get<any[]>(`${environment.apiUrl}/fraud`).pipe(
       map(flags => {
         // Map backend FraudFlag objects to Frontend AlertDTO
-        return flags.map(f => ({
+        return flags.map((f): AlertDTO => ({
+          id: f.id.toString(),
           donationId: f.donationId?.toString() || f.id.toString(),
-          donorName: 'Donor ' + f.donationId, // Can be improved if backend returns donor name
-          amount: 0, // Fill if available from backend
+          donorName: f.donorUsername || 'Donor ' + f.donationId,
+          amount: f.donationAmount || 0,
           riskScore: f.riskScore,
           reason: f.reason,
-          status: f.status,
-          date: new Date(f.flaggedDate).toLocaleString(),
-          paymentMethod: 'Unknown',
-          ipAddress: 'Unknown',
-          country: 'Unknown'
+          status: f.isApproved != null ? 'Resolved' : 'Pending',
+          date: f.donationTimestamp ? new Date(f.donationTimestamp).toLocaleString() : new Date(f.createdAt).toLocaleString(),
+          paymentMethod: f.paymentMethod || 'Unknown',
+          ipAddress: f.ipAddress || 'Unknown',
+          country: f.country || 'Unknown'
         }));
       }),
       catchError(err => {
@@ -44,9 +45,9 @@ export class FraudService {
     );
   }
 
-  reviewAlert(donationId: string, decision: string, notes: string): Observable<{success: boolean}> {
+  reviewAlert(flagId: string, decision: string, notes: string): Observable<{success: boolean}> {
     const isApproved = decision === 'Approve';
-    return this.http.put<any>(`${environment.apiUrl}/fraud/${donationId}/review`, {
+    return this.http.put<any>(`${environment.apiUrl}/fraud/${flagId}/review`, {
       isApproved,
       notes
     }).pipe(

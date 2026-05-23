@@ -164,15 +164,107 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-6">
-        <div *ngFor="let c of campaigns" class="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-5 hover:border-primary/40 transition-colors group">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-6" *ngIf="activeCampaigns.length > 0">
+        <div *ngFor="let c of activeCampaigns" class="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-5 hover:border-primary/40 transition-all duration-300 group flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-start mb-3">
+              <h3 class="text-white font-medium text-lg group-hover:text-primary transition-colors">{{ c.title }}</h3>
+              <span class="bg-primary/10 text-primary text-xs font-bold px-2.5 py-1 rounded-lg border border-primary/20 flex-shrink-0">
+                ₹{{ c.targetAmount | number }}
+              </span>
+            </div>
+            <p class="text-slate-400 text-sm line-clamp-2 mb-4">{{ c.description || 'No description provided.' }}</p>
+          </div>
+          <button (click)="endCampaign(c.id)" class="w-full mt-2 py-2 px-4 rounded-xl border border-red-500/30 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+            </svg>
+            End Campaign
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="activeCampaigns.length === 0" class="p-8 text-center text-slate-500 text-sm">
+        No active campaigns at the moment.
+      </div>
+    </div>
+
+    <!-- Ended Campaigns -->
+    <div class="glass-card overflow-hidden mt-8">
+      <div class="px-6 py-4 border-b border-slate-700/50">
+        <h2 class="text-white font-semibold flex items-center gap-2">Ended Campaigns</h2>
+        <p class="text-slate-400 text-xs mt-0.5">Campaigns that have ended their fundraising period</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-6" *ngIf="endedCampaigns.length > 0">
+        <div *ngFor="let c of endedCampaigns" 
+          (click)="selectEndedCampaign(c)"
+          [ngClass]="selectedEndedCampaign?.id === c.id ? 'border-primary bg-primary/5' : 'border-slate-700/50 hover:border-slate-500/50 bg-slate-800/10'"
+          class="border rounded-2xl p-5 cursor-pointer transition-all duration-300">
           <div class="flex justify-between items-start mb-3">
-            <h3 class="text-white font-medium text-lg group-hover:text-primary transition-colors">{{ c.title }}</h3>
-            <span class="bg-primary/10 text-primary text-xs font-bold px-2.5 py-1 rounded-lg border border-primary/20">
+            <h3 class="text-white font-medium text-lg">{{ c.title }}</h3>
+            <span class="bg-slate-700/50 text-slate-300 text-xs font-bold px-2.5 py-1 rounded-lg border border-slate-600/50 flex-shrink-0">
               ₹{{ c.targetAmount | number }}
             </span>
           </div>
           <p class="text-slate-400 text-sm line-clamp-2">{{ c.description || 'No description provided.' }}</p>
+          <div class="mt-4 flex justify-between text-xs text-slate-400 border-t border-slate-700/30 pt-3">
+            <span>Total Raised: <strong class="text-white">₹{{ c.totalAmountRaised | number }}</strong></span>
+            <span>Donations: <strong class="text-white">{{ c.totalDonations || c.donations?.length || 0 }}</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="endedCampaigns.length === 0" class="p-8 text-center text-slate-500 text-sm">
+        No ended campaigns to display.
+      </div>
+    </div>
+
+    <!-- Selected Ended Campaign Details (Donations & Donors) -->
+    <div class="glass-card overflow-hidden mt-6 animate-fade-in" *ngIf="selectedEndedCampaign">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-slate-700/50 bg-slate-800/10">
+        <div>
+          <h3 class="text-white font-bold text-lg">Campaign Performance: {{ selectedEndedCampaign.title }}</h3>
+          <p class="text-slate-400 text-xs mt-0.5">Donations and donors breakdown for this campaign</p>
+        </div>
+        <button (click)="selectedEndedCampaign = null" class="text-slate-400 hover:text-white text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 transition-colors">
+          Close Details
+        </button>
+      </div>
+
+      <div class="p-6">
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="border-b border-slate-700/50">
+                <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-3">Donation ID</th>
+                <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-3">Donor Name</th>
+                <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-3">Donor Email</th>
+                <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-3">Amount</th>
+                <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-3">Date</th>
+                <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-3">Verification Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-700/30">
+              <tr *ngFor="let d of selectedEndedCampaign.donations" class="hover:bg-slate-800/30 transition-colors duration-150">
+                <td class="px-6 py-4 text-sm text-slate-400 font-mono font-medium">TXN-{{ d.id }}</td>
+                <td class="px-6 py-4 text-white text-sm font-medium">{{ d.donorName || 'Anonymous' }}</td>
+                <td class="px-6 py-4 text-slate-400 text-sm font-mono">{{ d.donorEmail || '-' }}</td>
+                <td class="px-6 py-4 text-emerald-400 text-sm font-bold">₹{{ d.amount | number }}</td>
+                <td class="px-6 py-4 text-slate-400 text-sm">{{ d.timestamp | date:'mediumDate' }}</td>
+                <td class="px-6 py-4">
+                  <span *ngIf="d.isApproved === true" class="text-emerald-400 font-semibold text-xs bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">Successful</span>
+                  <span *ngIf="d.isApproved === false" class="text-red-400 font-semibold text-xs bg-red-500/10 px-2 py-0.5 rounded-full border border-red-500/20">Rejected</span>
+                  <span *ngIf="d.isApproved === null" class="text-amber-400 font-semibold text-xs bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">Under Review</span>
+                </td>
+              </tr>
+              <tr *ngIf="!selectedEndedCampaign.donations || selectedEndedCampaign.donations.length === 0">
+                <td colspan="6" class="text-center py-8 text-slate-500 text-sm">
+                  No donations received for this campaign.
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

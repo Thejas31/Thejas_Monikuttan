@@ -69,7 +69,7 @@ export class UserDashboardComponent implements OnInit {
     }
 
     this.donationService.getCampaigns().subscribe(c => {
-      this.campaigns = c;
+      this.campaigns = c ? c.filter(camp => camp.isActive !== false) : [];
     });
   }
 
@@ -130,12 +130,12 @@ export class UserDashboardComponent implements OnInit {
 
   // User confirmed — execute the actual donation
   confirmDonation() {
-    this.showConfirmModal = false;
     this.isSubmitting = true;
 
     this.donationService.submitDonation(this.donation).subscribe({
       next: (result) => {
         this.isSubmitting = false;
+        this.showConfirmModal = false;
         if (result.success) {
           const donatedAmount = this.donation.amount;
           const campaignId = parseInt(this.donation.campaignId, 10);
@@ -162,6 +162,7 @@ export class UserDashboardComponent implements OnInit {
       },
       error: () => {
         this.isSubmitting = false;
+        this.showConfirmModal = false;
         this.showToast('Donation failed. Please try again.', 'error');
       }
     });

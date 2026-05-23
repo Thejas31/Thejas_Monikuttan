@@ -28,8 +28,14 @@ namespace DonationFraud.API.Repositories
         private readonly DonationDbContext _context;
         public CampaignRepository(DonationDbContext context) => _context = context;
 
-        public async Task<Campaign?> GetCampaignByIdAsync(int id) => await _context.Campaigns.Include(c => c.Donations).FirstOrDefaultAsync(c => c.Id == id);
-        public async Task<IEnumerable<Campaign>> GetAllCampaignsAsync() => await _context.Campaigns.Include(c => c.Donations).ToListAsync();
+        public async Task<Campaign?> GetCampaignByIdAsync(int id) => await _context.Campaigns
+            .Include(c => c.Donations)
+                .ThenInclude(d => d.User)
+            .FirstOrDefaultAsync(c => c.Id == id);
+        public async Task<IEnumerable<Campaign>> GetAllCampaignsAsync() => await _context.Campaigns
+            .Include(c => c.Donations)
+                .ThenInclude(d => d.User)
+            .ToListAsync();
         public async Task AddCampaignAsync(Campaign campaign) => await _context.Campaigns.AddAsync(campaign);
         public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
     }

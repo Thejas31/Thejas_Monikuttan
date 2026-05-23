@@ -169,7 +169,7 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<DonationDbContext>();
     // Make sure to apply migrations or create DB
-    // dbContext.Database.Migrate();
+    dbContext.Database.Migrate();
 
     if (!dbContext.FraudRuleConfigs.Any())
     {

@@ -37,6 +37,16 @@ namespace DonationFraud.API.Services
             return campaign == null ? null : MapToDto(campaign);
         }
 
+        public async Task<bool> EndCampaignAsync(int id)
+        {
+            var campaign = await _campaignRepo.GetCampaignByIdAsync(id);
+            if (campaign == null) return false;
+
+            campaign.IsActive = false;
+            await _campaignRepo.SaveChangesAsync();
+            return true;
+        }
+
         private static CampaignResponseDto MapToDto(Campaign c) => new()
         {
             Id = c.Id,
@@ -45,7 +55,17 @@ namespace DonationFraud.API.Services
             TargetAmount = c.TargetAmount,
             CreatedAt = c.CreatedAt,
             TotalDonations = c.Donations?.Count ?? 0,
-            TotalAmountRaised = c.Donations?.Sum(d => d.Amount) ?? 0
+            TotalAmountRaised = c.Donations?.Sum(d => d.Amount) ?? 0,
+            IsActive = c.IsActive,
+            Donations = c.Donations?.Select(d => new CampaignDonationDto
+            {
+                Id = d.Id,
+                Amount = d.Amount,
+                Timestamp = d.Timestamp,
+                DonorName = d.User != null ? $"{d.User.FirstName} {d.User.LastName}".Trim() : "Anonymous",
+                DonorEmail = d.User?.Email ?? string.Empty,
+                IsApproved = d.FraudFlag != null ? d.FraudFlag.IsApproved : true
+            }).ToList() ?? new List<CampaignDonationDto>()
         };
     }
 }

@@ -42,5 +42,17 @@ namespace DonationFraud.API.Controllers
             }
             return Ok(campaign);
         }
+
+        [HttpPut("{id}/end")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> EndCampaign(int id)
+        {
+            var success = await _campaignService.EndCampaignAsync(id);
+            if (!success)
+            {
+                return NotFound("Campaign not found.");
+            }
+            return Ok(new { Message = "Campaign ended successfully." });
+        }
     }
 }

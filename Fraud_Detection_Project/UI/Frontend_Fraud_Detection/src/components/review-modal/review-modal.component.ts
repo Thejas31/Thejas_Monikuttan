@@ -29,14 +29,13 @@ export class ReviewModalComponent {
     if (!this.alert || !this.decision) return;
 
     this.isSaving = true;
-    this.fraudService.reviewAlert(this.alert.donationId, this.decision, this.notes).subscribe({
+    this.fraudService.reviewAlert(this.alert.id, this.decision, this.notes).subscribe({
       next: () => {
         this.isSaving = false;
         this.reviewed.emit();
       },
       error: () => {
         this.isSaving = false;
-        // Handle error
       }
     });
   }
