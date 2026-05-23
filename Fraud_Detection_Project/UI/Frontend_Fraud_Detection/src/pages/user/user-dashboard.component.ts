@@ -21,12 +21,19 @@ export class UserDashboardComponent implements OnInit {
   
   userFullName = '';
   userEmail = '';
+  userId = '';
   totalDonated = 0;
   totalCampaignsSupported = 0;
   isLoading = false;
   isSubmitting = false;
-  successMessage = '';
-  errorMessage = '';
+
+  // Confirmation modal
+  showConfirmModal = false;
+
+  // Toast
+  toastMessage: string | null = null;
+  toastType: 'success' | 'warning' | 'error' = 'success';
+  private toastTimer: any;
 
   donation: DonationDTO = {
     campaignId: '',
@@ -55,10 +62,10 @@ export class UserDashboardComponent implements OnInit {
     if (user) {
       this.userFullName = `${user.firstName} ${user.lastName}`;
       this.userEmail = user.email;
+      this.userId = user.id;
       this.donation.donorName = this.userFullName;
       this.donation.donorEmail = this.userEmail;
-
-      this.fetchMyDonations(user.id);
+      this.fetchMyDonations();
     }
 
     this.donationService.getCampaigns().subscribe(c => {
@@ -66,10 +73,17 @@ export class UserDashboardComponent implements OnInit {
     });
   }
 
-  fetchMyDonations(userId: string) {
-    this.donationService.getUserDonations(userId).subscribe(donations => {
-      this.myDonations = donations || [];
-      this.calculateStats();
+  fetchMyDonations() {
+    if (!this.userId) return;
+    this.donationService.getUserDonations(this.userId).subscribe({
+      next: donations => {
+        this.myDonations = donations || [];
+        this.calculateStats();
+      },
+      error: () => {
+        this.myDonations = [];
+        this.calculateStats();
+      }
     });
   }
 
@@ -82,8 +96,11 @@ export class UserDashboardComponent implements OnInit {
   setActiveTab(tab: 'dashboard' | 'make-donations' | 'my-donations') {
     this.activeTab = tab;
     this.selectedCampaign = null;
-    this.successMessage = '';
-    this.errorMessage = '';
+    this.showConfirmModal = false;
+    // Refresh stats when switching to dashboard
+    if (tab === 'dashboard' || tab === 'my-donations') {
+      this.fetchMyDonations();
+    }
   }
 
   selectCampaign(campaign: CampaignDTO) {
@@ -94,50 +111,82 @@ export class UserDashboardComponent implements OnInit {
 
   logout() {
     this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
-  selectAmount(amount: number) {
-    this.donation.amount = amount;
-  }
-
+  // Called when user clicks "Complete Donation" — validates and opens confirm modal
   onSubmit() {
-    this.successMessage = '';
-    this.errorMessage = '';
-
     if (!this.donation.campaignId || !this.donation.amount || !this.donation.donorName) {
-      this.errorMessage = 'Please fill in all required fields.';
+      this.showToast('Please fill in all required fields.', 'error');
       return;
     }
-
     if (this.donation.amount <= 0) {
-      this.errorMessage = 'Please enter a valid donation amount.';
+      this.showToast('Please enter a valid donation amount.', 'error');
       return;
     }
+    this.showConfirmModal = true;
+  }
 
+  // User confirmed — execute the actual donation
+  confirmDonation() {
+    this.showConfirmModal = false;
     this.isSubmitting = true;
 
     this.donationService.submitDonation(this.donation).subscribe({
       next: (result) => {
         this.isSubmitting = false;
         if (result.success) {
-          this.successMessage = `✅ ${result.message}! Your donation of ₹${this.donation.amount.toLocaleString()} has been received.`;
-          // Reset form
+          const donatedAmount = this.donation.amount;
+          const campaignId = parseInt(this.donation.campaignId, 10);
+
+          // Optimistically update stats immediately (before API refresh completes)
+          this.totalDonated += donatedAmount;
+          const existingCampaign = this.myDonations.find(d => d.campaignId === campaignId);
+          if (!existingCampaign) {
+            this.totalCampaignsSupported++;
+          }
+
+          // Reset form and navigate back
           this.donation.campaignId = '';
           this.donation.amount = 0;
           this.donation.message = '';
           this.selectedCampaign = null;
 
-          // Refresh donations
-          const user = this.authService.getCurrentUserValue();
-          if (user) {
-            this.fetchMyDonations(user.id);
-          }
+          // Show success toast
+          this.showToast('Donation made successfully!', 'success');
+
+          // Refresh from server to get accurate data
+          this.fetchMyDonations();
         }
       },
       error: () => {
         this.isSubmitting = false;
-        this.errorMessage = 'Donation failed. Please try again.';
+        this.showToast('Donation failed. Please try again.', 'error');
       }
     });
+  }
+
+  // User cancelled — close modal and show withheld toast
+  cancelDonation() {
+    this.showConfirmModal = false;
+    this.showToast('Donation Withheld!', 'warning');
+  }
+
+  showToast(message: string, type: 'success' | 'warning' | 'error') {
+    // Cancel any pending timer
+    if (this.toastTimer) {
+      clearTimeout(this.toastTimer);
+    }
+    this.toastMessage = message;
+    this.toastType = type;
+    // Auto-hide after 3.5 seconds
+    this.toastTimer = setTimeout(() => {
+      this.toastMessage = null;
+    }, 3500);
+  }
+
+  dismissToast() {
+    if (this.toastTimer) clearTimeout(this.toastTimer);
+    this.toastMessage = null;
   }
 }

@@ -59,15 +59,7 @@
   <!-- Main Content Area -->
   <main class="flex-1 max-w-7xl w-full mx-auto p-6 md:p-8">
     
-    <!-- Success/Error Messages -->
-    <div *ngIf="successMessage" class="mb-6 p-4 rounded-xl bg-status-success/10 border border-status-success/30 text-status-success text-sm flex items-center justify-between">
-      {{ successMessage }}
-      <button (click)="successMessage = ''" class="text-status-success hover:text-white">✕</button>
-    </div>
-    <div *ngIf="errorMessage" class="mb-6 p-4 rounded-xl bg-status-danger/10 border border-status-danger/30 text-status-danger text-sm flex items-center justify-between">
-      {{ errorMessage }}
-      <button (click)="errorMessage = ''" class="text-status-danger hover:text-white">✕</button>
-    </div>
+    <!-- Toast notification renders here (empty slot — toast is fixed overlay below) -->
 
     <!-- ================= DASHBOARD TAB ================= -->
     <div *ngIf="activeTab === 'dashboard'" class="animate-fade-in space-y-6">
@@ -297,4 +289,72 @@
     </div>
 
   </main>
+
+  <!-- ======= CONFIRMATION MODAL ======= -->
+  <div *ngIf="showConfirmModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" (click)="cancelDonation()"></div>
+
+    <!-- Modal Card -->
+    <div class="relative w-full max-w-sm glass-card p-0 overflow-hidden">
+      <div class="px-6 py-5 border-b border-slate-700/50 bg-dark-bg/40">
+        <h3 class="text-white font-semibold text-base">Confirm Your Donation</h3>
+      </div>
+
+      <div class="px-6 py-5 text-center">
+        <div class="w-16 h-16 rounded-full bg-primary/15 flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <p class="text-slate-300 text-sm mb-1">Are you sure you want to Donate</p>
+        <p class="text-white text-2xl font-bold mb-1">₹{{ donation.amount | number }}</p>
+        <p class="text-slate-400 text-sm">to <span class="text-primary font-medium">{{ selectedCampaign?.title }}</span>?</p>
+      </div>
+
+      <div class="flex gap-3 px-6 py-4 border-t border-slate-700/50 bg-dark-bg/40">
+        <button (click)="cancelDonation()"
+          class="flex-1 py-2.5 px-4 rounded-xl border border-slate-600 text-slate-300 hover:bg-slate-700/50 hover:text-white text-sm font-medium transition-all duration-200">
+          No
+        </button>
+        <button (click)="confirmDonation()" [disabled]="isSubmitting"
+          class="flex-1 py-2.5 px-4 rounded-xl bg-primary hover:bg-primary-dark text-white text-sm font-semibold shadow-lg shadow-primary/20 transition-all duration-200 disabled:opacity-50">
+          <span *ngIf="!isSubmitting">Yes, Donate!</span>
+          <span *ngIf="isSubmitting" class="flex items-center justify-center gap-2">
+            <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+            </svg>
+            Processing...
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= TOAST NOTIFICATION ======= -->
+  <div *ngIf="toastMessage" class="fixed bottom-6 right-6 z-[60] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl text-sm font-medium transition-all duration-300"
+    [ngClass]="{
+      'bg-emerald-500/90 text-white border border-emerald-400/40': toastType === 'success',
+      'bg-amber-500/90 text-white border border-amber-400/40': toastType === 'warning',
+      'bg-red-500/90 text-white border border-red-400/40': toastType === 'error'
+    }">
+    <!-- Icon -->
+    <svg *ngIf="toastType === 'success'" class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+    </svg>
+    <svg *ngIf="toastType === 'warning'" class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+    </svg>
+    <svg *ngIf="toastType === 'error'" class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+    {{ toastMessage }}
+    <button (click)="dismissToast()" class="ml-2 opacity-70 hover:opacity-100 transition-opacity">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
 </div>
