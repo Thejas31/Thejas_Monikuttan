@@ -18,7 +18,8 @@ namespace DonationFraud.API.Services
             {
                 Title = request.Title,
                 Description = request.Description,
-                TargetAmount = request.TargetAmount
+                TargetAmount = request.TargetAmount,
+                IsActive = true
             };
             await _campaignRepo.AddCampaignAsync(campaign);
             await _campaignRepo.SaveChangesAsync();

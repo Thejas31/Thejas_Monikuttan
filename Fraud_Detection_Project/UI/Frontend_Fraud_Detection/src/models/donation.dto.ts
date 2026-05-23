@@ -20,6 +20,7 @@ export interface CampaignDTO {
   targetAmount?: number;
   totalAmountRaised?: number;
   isActive?: boolean;
+  totalDonations?: number;
   donations?: CampaignDonationDTO[];
 }
 

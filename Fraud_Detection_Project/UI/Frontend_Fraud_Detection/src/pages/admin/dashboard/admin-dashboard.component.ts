@@ -39,7 +39,9 @@ export class AdminDashboardComponent implements OnInit {
 
     this.fraudService.getRecentAlerts().subscribe(alerts => {
       this.alerts = alerts;
-      this.isLoading = false;
+      setTimeout(() => {
+        this.isLoading = false;
+      });
     });
 
     this.loadCampaigns();
