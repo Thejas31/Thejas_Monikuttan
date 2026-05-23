@@ -94,7 +94,62 @@
         </div>
       </div>
       
-      <!-- Recent Activity preview could go here -->
+      <!-- Recent Contributions glimpse list -->
+      <div class="glass-card p-6 space-y-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-xl font-bold text-white">Recent Contributions</h2>
+            <p class="text-slate-400 text-xs mt-1">A quick overview of your donations and their verification status.</p>
+          </div>
+          <button (click)="setActiveTab('my-donations')" class="text-primary hover:text-white text-xs font-semibold flex items-center gap-1 transition-colors">
+            View All
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+          </button>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Item list -->
+          <div *ngFor="let d of myDonations.slice(0, 5)" class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-slate-800/20 border border-slate-700/30 hover:border-slate-600/40 transition-all duration-200">
+            <div class="flex items-center gap-4">
+              <!-- Icon based on status -->
+              <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                [ngClass]="{
+                  'bg-emerald-500/10 text-emerald-400': d.isApproved === true,
+                  'bg-red-500/10 text-red-400': d.isApproved === false,
+                  'bg-amber-500/10 text-amber-400': d.isApproved === null
+                }">
+                <svg *ngIf="d.isApproved === true" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <svg *ngIf="d.isApproved === false" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <svg *ngIf="d.isApproved === null" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              </div>
+
+              <div>
+                <h4 class="text-white font-semibold text-sm leading-snug">{{ d.campaignTitle }}</h4>
+                <p class="text-slate-400 text-[11px] mt-0.5 font-mono">ID: TXN-{{ d.id }} • {{ d.timestamp | date:'mediumDate' }}</p>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between sm:justify-end gap-6 border-t border-slate-700/30 sm:border-0 pt-3 sm:pt-0">
+              <div class="text-left sm:text-right">
+                <span class="text-slate-400 text-[10px] block">Amount</span>
+                <span class="text-white font-bold text-sm">₹{{ d.amount | number }}</span>
+              </div>
+              
+              <div class="text-right">
+                <span class="text-slate-400 text-[10px] block">Status</span>
+                <span *ngIf="d.isApproved === true" class="text-emerald-400 font-semibold text-xs bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">Successful</span>
+                <span *ngIf="d.isApproved === false" class="text-red-400 font-semibold text-xs bg-red-500/10 px-2 py-0.5 rounded-full border border-red-500/20">Refunded</span>
+                <span *ngIf="d.isApproved === null" class="text-amber-400 font-semibold text-xs bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">Under Review</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty list message -->
+          <div *ngIf="myDonations.length === 0" class="text-center py-8 text-slate-500">
+            No past contributions to display.
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- ================= MAKE DONATIONS TAB ================= -->
@@ -244,47 +299,123 @@
     </div>
 
     <!-- ================= MY DONATIONS TAB ================= -->
-    <div *ngIf="activeTab === 'my-donations'" class="animate-fade-in">
+    <div *ngIf="activeTab === 'my-donations'" class="animate-fade-in space-y-6">
       <div class="mb-8">
         <h1 class="text-2xl font-bold text-white">Donation History</h1>
         <p class="text-slate-400 text-sm mt-1">Review your past contributions and their security status.</p>
       </div>
 
-      <div class="glass-card overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead>
-              <tr class="border-b border-slate-700/50 bg-slate-800/20">
-                <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-4">Date</th>
-                <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-4">Campaign</th>
-                <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-4">Amount</th>
-                <th class="text-left text-slate-400 text-xs font-semibold uppercase tracking-wider px-6 py-4">Status</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-700/30">
-              <tr *ngFor="let d of myDonations" class="hover:bg-slate-800/30 transition-colors">
-                <td class="px-6 py-4 text-slate-300 text-sm">{{ d.timestamp | date:'mediumDate' }}</td>
-                <td class="px-6 py-4 text-white font-medium">{{ d.campaignTitle }}</td>
-                <td class="px-6 py-4 text-white font-medium">₹{{ d.amount | number }}</td>
-                <td class="px-6 py-4">
-                  <span *ngIf="!d.isFlagged" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-status-success/20 text-status-success border border-status-success/30">
-                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    Successful
-                  </span>
-                  <span *ngIf="d.isFlagged" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-status-warning/20 text-status-warning border border-status-warning/30" title="{{ d.fraudReason }}">
-                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                    Under Review
-                  </span>
-                </td>
-              </tr>
-              <tr *ngIf="myDonations.length === 0">
-                <td colspan="4" class="px-6 py-12 text-center text-slate-500">
-                  You haven't made any donations yet.
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      <!-- Card Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" *ngIf="myDonations.length > 0">
+        <div *ngFor="let d of myDonations" class="glass-card hover:border-slate-600/30 transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between overflow-hidden relative group">
+          
+          <!-- Subtle color background highlight depending on status -->
+          <div class="absolute inset-0 bg-gradient-to-br transition-opacity duration-300 opacity-0 group-hover:opacity-5 pointer-events-none"
+            [ngClass]="{
+              'from-emerald-500 to-transparent': d.isApproved === true,
+              'from-red-500 to-transparent': d.isApproved === false,
+              'from-amber-500 to-transparent': d.isApproved === null
+            }">
+          </div>
+
+          <div class="p-6 space-y-5 flex-1 relative z-10">
+            <!-- Header: Date and transaction ID -->
+            <div class="flex items-center justify-between text-xs text-slate-400">
+              <span class="flex items-center gap-1">
+                <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                {{ d.timestamp | date:'mediumDate' }}
+              </span>
+              <span class="font-mono bg-slate-800 px-2 py-0.5 rounded text-[10px] text-slate-300">TXN-#{{ d.id }}</span>
+            </div>
+
+            <!-- Campaign Title & Contributor -->
+            <div>
+              <h3 class="text-white font-bold text-lg leading-snug group-hover:text-primary transition-colors line-clamp-2" title="{{ d.campaignTitle }}">
+                {{ d.campaignTitle }}
+              </h3>
+            </div>
+
+            <!-- Amount Section -->
+            <div class="flex items-baseline gap-1.5">
+              <span class="text-slate-400 text-xs font-medium uppercase tracking-wider">Amount:</span>
+              <span class="text-2xl font-black text-white">₹{{ d.amount | number }}</span>
+            </div>
+
+            <!-- Status Indicator Section -->
+            <div class="pt-4 border-t border-slate-700/50 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-slate-400 text-xs">Verification Status:</span>
+                
+                <!-- Successful Badge -->
+                <span *ngIf="d.isApproved === true" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-sm shadow-emerald-500/5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  Successful
+                </span>
+
+                <!-- Rejected Badge -->
+                <span *ngIf="d.isApproved === false" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-red-500/10 text-red-400 border border-red-500/20 shadow-sm shadow-red-500/5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse"></span>
+                  Rejected
+                </span>
+
+                <!-- Under Review Badge -->
+                <span *ngIf="d.isApproved === null" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 shadow-sm shadow-amber-500/5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                  Under Review
+                </span>
+              </div>
+
+              <!-- Message based on status -->
+              <div class="rounded-xl p-3.5 text-xs leading-relaxed transition-all duration-300"
+                [ngClass]="{
+                  'bg-emerald-500/5 text-emerald-300 border border-emerald-500/10': d.isApproved === true,
+                  'bg-red-500/5 text-red-300 border border-red-500/10': d.isApproved === false,
+                  'bg-amber-500/5 text-amber-300 border border-amber-500/10': d.isApproved === null
+                }">
+                
+                <div class="flex gap-2">
+                  <!-- Custom mini-icons inside message box -->
+                  <span *ngIf="d.isApproved === true" class="text-base select-none">🎉</span>
+                  <span *ngIf="d.isApproved === false" class="text-base select-none">✉️</span>
+                  <span *ngIf="d.isApproved === null" class="text-base select-none">⏳</span>
+                  
+                  <div class="flex-1">
+                    <p *ngIf="d.isApproved === true" class="font-medium">
+                      The donation is successfull. Thank you.
+                    </p>
+                    <p *ngIf="d.isApproved === false" class="font-medium">
+                      The donation money has been refunded.
+                    </p>
+                    <p *ngIf="d.isApproved === null" class="font-medium">
+                      Your donation is under review. Thank you for your patience.
+                    </p>
+                    
+                    <!-- Show admin notes if present -->
+                    <div *ngIf="d.adminNotes" class="mt-2 pt-2 border-t border-slate-700/30 text-[11px] text-slate-400">
+                      <strong class="text-slate-300 font-semibold block not-italic">Admin Notes:</strong>
+                      <span class="italic">"{{ d.adminNotes }}"</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
         </div>
+      </div>
+
+      <!-- Beautiful Empty State -->
+      <div *ngIf="myDonations.length === 0" class="py-16 text-center text-slate-400 glass-card max-w-md mx-auto space-y-4 animate-fade-in">
+        <div class="w-16 h-16 rounded-full bg-slate-800/80 border border-slate-700/50 flex items-center justify-center mx-auto text-2xl">
+          💝
+        </div>
+        <div>
+          <h3 class="text-white font-bold text-lg">No Donations Yet</h3>
+          <p class="text-slate-400 text-sm mt-1">Your contributions will appear here once you support an active campaign.</p>
+        </div>
+        <button (click)="setActiveTab('make-donations')" class="mt-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-dark text-white text-sm font-semibold transition-all">
+          Explore Campaigns
+        </button>
       </div>
     </div>
 

@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { DonationDTO, CampaignDTO, MyDonationDTO } from '../models/donation.dto';
 import { environment } from '../environments/environment';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +12,21 @@ export class DonationService {
   constructor(private http: HttpClient) {}
 
   getCampaigns(): Observable<CampaignDTO[]> {
-    return this.http.get<CampaignDTO[]>(`${environment.apiUrl}/campaigns`);
+    return this.http.get<CampaignDTO[]>(`${environment.apiUrl}/campaigns`).pipe(
+      catchError(err => {
+        console.error('Failed to load campaigns from server:', err.message || err);
+        return of([]);
+      })
+    );
   }
 
   getUserDonations(userId: string): Observable<MyDonationDTO[]> {
-    return this.http.get<MyDonationDTO[]>(`${environment.apiUrl}/donations/user/${userId}`);
+    return this.http.get<MyDonationDTO[]>(`${environment.apiUrl}/donations/user/${userId}`).pipe(
+      catchError(err => {
+        console.error(`Failed to load donations for user ${userId}:`, err.message || err);
+        return of([]);
+      })
+    );
   }
 
   createCampaign(campaign: { title: string, description: string, targetAmount: number }): Observable<any> {

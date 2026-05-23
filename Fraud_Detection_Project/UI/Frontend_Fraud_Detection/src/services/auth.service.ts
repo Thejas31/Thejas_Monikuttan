@@ -40,7 +40,7 @@ export class AuthService {
         const surname = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname'] || '';
 
         const user: UserDTO = {
-          id: decoded.nameid || '0',
+          id: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] || decoded.nameid || '0',
           email: credentials.email,
           role: roleClaim,
           firstName: givenName,
@@ -74,7 +74,7 @@ export class AuthService {
         const surname = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname'] || data.lastName;
 
         const user: UserDTO = {
-          id: decoded.nameid || '0',
+          id: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] || decoded.nameid || '0',
           email: data.email,
           role: roleClaim,
           firstName: givenName,

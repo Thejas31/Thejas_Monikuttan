@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 import { AlertDTO, DashboardStatsDTO } from '../models/alert.dto';
 import { environment } from '../environments/environment';
 
@@ -36,6 +36,10 @@ export class FraudService {
           ipAddress: 'Unknown',
           country: 'Unknown'
         }));
+      }),
+      catchError(err => {
+        console.error('Failed to load recent alerts from server:', err.message || err);
+        return of([]);
       })
     );
   }

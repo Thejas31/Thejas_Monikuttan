@@ -64,7 +64,9 @@ namespace DonationFraud.API.Services
                 CampaignTitle = d.Campaign?.Title ?? string.Empty,
                 IsFlagged = d.FraudFlag != null,
                 FraudReason = d.FraudFlag?.Reason,
-                RiskLevel = d.FraudFlag?.RiskLevel.ToString()
+                RiskLevel = d.FraudFlag?.RiskLevel.ToString(),
+                IsApproved = d.FraudFlag != null ? d.FraudFlag.IsApproved : true,
+                AdminNotes = d.FraudFlag?.AdminNotes
             });
         }
     }

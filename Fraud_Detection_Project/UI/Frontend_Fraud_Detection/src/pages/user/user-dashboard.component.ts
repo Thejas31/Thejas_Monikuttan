@@ -88,8 +88,9 @@ export class UserDashboardComponent implements OnInit {
   }
 
   calculateStats() {
-    this.totalDonated = this.myDonations.reduce((sum, d) => sum + d.amount, 0);
-    const uniqueCampaigns = new Set(this.myDonations.map(d => d.campaignId));
+    const validDonations = this.myDonations.filter(d => d.isApproved !== false);
+    this.totalDonated = validDonations.reduce((sum, d) => sum + d.amount, 0);
+    const uniqueCampaigns = new Set(validDonations.map(d => d.campaignId));
     this.totalCampaignsSupported = uniqueCampaigns.size;
   }
 

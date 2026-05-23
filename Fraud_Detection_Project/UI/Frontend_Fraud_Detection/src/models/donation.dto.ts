@@ -30,4 +30,6 @@ export interface MyDonationDTO {
   isFlagged: boolean;
   fraudReason?: string;
   riskLevel?: string;
+  isApproved?: boolean | null;
+  adminNotes?: string;
 }

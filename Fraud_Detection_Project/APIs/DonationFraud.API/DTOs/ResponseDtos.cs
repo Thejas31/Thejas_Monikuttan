@@ -28,6 +28,8 @@ namespace DonationFraud.API.DTOs
         public bool IsFlagged { get; set; }
         public string? FraudReason { get; set; }
         public string? RiskLevel { get; set; }
+        public bool? IsApproved { get; set; }
+        public string? AdminNotes { get; set; }
     }
 
     // ====== Fraud Alert Response DTOs ======
