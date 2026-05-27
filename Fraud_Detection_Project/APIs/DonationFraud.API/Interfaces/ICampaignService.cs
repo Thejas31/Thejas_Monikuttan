@@ -10,5 +10,6 @@ namespace DonationFraud.API.Interfaces
         Task<IEnumerable<CampaignResponseDto>> GetAllCampaignsAsync();
         Task<CampaignResponseDto?> GetCampaignByIdAsync(int id);
         Task<bool> EndCampaignAsync(int id);
+        Task<bool> ReactivateCampaignAsync(int id);
     }
 }

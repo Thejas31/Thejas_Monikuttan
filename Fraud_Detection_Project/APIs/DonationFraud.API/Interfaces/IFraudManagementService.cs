@@ -9,5 +9,6 @@ namespace DonationFraud.API.Interfaces
         Task<IEnumerable<FraudAlertResponseDto>> GetAllAlertsAsync();
         Task<IEnumerable<FraudAlertResponseDto>> GetHighRiskAlertsAsync();
         Task<bool> ReviewAlertAsync(int flagId, bool isApproved, string notes, int adminUserId);
+        Task<DashboardStatsDto> GetDashboardStatsAsync();
     }
 }

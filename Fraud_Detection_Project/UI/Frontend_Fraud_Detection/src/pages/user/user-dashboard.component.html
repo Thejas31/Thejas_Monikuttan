@@ -226,13 +226,13 @@
             </label>
             
             <div class="flex items-center gap-4 mb-4">
-              <input type="range" [(ngModel)]="donation.amount" min="1" [max]="selectedCampaign.targetAmount || 100000" step="100"
+              <input type="range" [(ngModel)]="donation.amount" (ngModelChange)="onAmountChange()" min="1" [max]="(selectedCampaign.targetAmount ?? 0) - (selectedCampaign.totalAmountRaised ?? 0)" step="10"
                 class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-primary">
             </div>
             
             <div class="relative">
               <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">₹</span>
-              <input type="number" [(ngModel)]="donation.amount" name="amount" min="1"
+              <input type="number" [(ngModel)]="donation.amount" (ngModelChange)="onAmountChange()" name="amount" min="1" [max]="(selectedCampaign.targetAmount ?? 0) - (selectedCampaign.totalAmountRaised ?? 0)"
                 class="w-full pl-8 pr-4 py-3.5 bg-dark-bg/50 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-white text-lg font-medium transition-all">
             </div>
           </div>

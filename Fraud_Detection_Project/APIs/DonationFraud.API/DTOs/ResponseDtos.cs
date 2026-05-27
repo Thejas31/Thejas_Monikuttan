@@ -78,4 +78,14 @@ namespace DonationFraud.API.DTOs
         public string Email { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
     }
+
+    // ====== Dashboard DTO for dynamic stats in Admin Dashboard ======
+    
+    public class DashboardStatsDto
+    {
+        public string TotalDonations { get; set; } = string.Empty;
+        public int TransactionsToday { get; set; }
+        public int FlaggedDonations { get; set; }
+        public int ConfirmedFraud { get; set; }
+    }
 }

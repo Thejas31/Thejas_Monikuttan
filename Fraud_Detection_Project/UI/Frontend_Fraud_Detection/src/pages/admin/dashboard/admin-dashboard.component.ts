@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FraudService } from '../../../services/fraud.service';
@@ -16,7 +16,7 @@ import { CampaignDTO } from '../../../models/donation.dto';
   imports: [CommonModule, RouterModule, SidebarComponent, ReviewModalComponent, CreateCampaignModalComponent],
   templateUrl: './admin-dashboard.component.html',
 })
-export class AdminDashboardComponent implements OnInit {
+export class AdminDashboardComponent implements OnInit, OnDestroy {
   stats: DashboardStatsDTO | null = null;
   alerts: AlertDTO[] = [];
   selectedAlert: AlertDTO | null = null;
@@ -25,6 +25,11 @@ export class AdminDashboardComponent implements OnInit {
   campaigns: CampaignDTO[] = [];
   isCampaignsDummy = false;
   showCreateCampaignModal = false;
+  private pollInterval: any;
+
+  activeCampaigns: CampaignDTO[] = [];
+  endedCampaigns: CampaignDTO[] = [];
+  selectedEndedCampaign: CampaignDTO | null = null;
 
   constructor(
     private fraudService: FraudService,
@@ -33,112 +38,101 @@ export class AdminDashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.fraudService.getDashboardStats().subscribe(s => {
-      this.stats = s;
-    });
-
-    this.fraudService.getRecentAlerts().subscribe(alerts => {
-      this.alerts = alerts;
-      setTimeout(() => {
-        this.isLoading = false;
-      });
-    });
-
-    this.loadCampaigns();
+    this.loadAllData();
+    // Background polling every 5 seconds to keep the admin dashboard live and responsive
+    this.pollInterval = setInterval(() => {
+      this.loadAllDataSilently();
+    }, 5000);
   }
 
-  activeCampaigns: CampaignDTO[] = [];
-  endedCampaigns: CampaignDTO[] = [];
-  selectedEndedCampaign: CampaignDTO | null = null;
+  ngOnDestroy() {
+    if (this.pollInterval) {
+      clearInterval(this.pollInterval);
+    }
+  }
+
+  loadAllData() {
+    this.isLoading = true;
+    this.loadAllDataSilently(() => {
+      this.isLoading = false;
+    });
+  }
+
+  loadAllDataSilently(callback?: () => void) {
+    let completed = 0;
+    const checkComplete = () => {
+      completed++;
+      if (completed === 3 && callback) {
+        callback();
+      }
+    };
+
+    this.fraudService.getDashboardStats().subscribe({
+      next: s => {
+        this.stats = s;
+        checkComplete();
+      },
+      error: () => checkComplete()
+    });
+
+    this.fraudService.getRecentAlerts().subscribe({
+      next: alerts => {
+        this.alerts = alerts;
+        checkComplete();
+      },
+      error: () => checkComplete()
+    });
+
+    this.donationService.getCampaigns().subscribe({
+      next: c => {
+        this.campaigns = c || [];
+        this.activeCampaigns = this.campaigns.filter(camp => camp.isActive !== false);
+        this.endedCampaigns = this.campaigns.filter(camp => camp.isActive === false);
+        if (this.selectedEndedCampaign) {
+          const updated = this.campaigns.find(camp => camp.id === this.selectedEndedCampaign?.id);
+          if (updated) {
+            this.selectedEndedCampaign = updated;
+          }
+        }
+        checkComplete();
+      },
+      error: () => checkComplete()
+    });
+  }
 
   loadCampaigns() {
     this.donationService.getCampaigns().subscribe(c => {
-      if (!c || c.length === 0) {
-        this.isCampaignsDummy = true;
-        const dummyCampaigns: CampaignDTO[] = [
-          { 
-            id: 'dummy-1', 
-            title: 'Save the Amazon Rainforest', 
-            description: 'Help us plant trees and protect wildlife.', 
-            targetAmount: 50000, 
-            isActive: true, 
-            totalAmountRaised: 12000 
-          },
-          { 
-            id: 'dummy-2', 
-            title: 'Clean Water Initiative', 
-            description: 'Providing clean water to remote villages.', 
-            targetAmount: 25000, 
-            isActive: true, 
-            totalAmountRaised: 5000 
-          },
-          { 
-            id: 'dummy-3', 
-            title: 'Ended Scholarship Fund', 
-            description: 'Providing tuition fees for underprivileged students.', 
-            targetAmount: 10000, 
-            isActive: false, 
-            totalAmountRaised: 10000,
-            donations: [
-              { id: 101, amount: 5000, timestamp: '2026-05-10T12:00:00Z', donorName: 'John Doe', donorEmail: 'john@example.com', isApproved: true },
-              { id: 102, amount: 5000, timestamp: '2026-05-11T14:30:00Z', donorName: 'Jane Smith', donorEmail: 'jane@example.com', isApproved: true }
-            ]
-          }
-        ];
-        this.activeCampaigns = dummyCampaigns.filter(camp => camp.isActive !== false);
-        this.endedCampaigns = dummyCampaigns.filter(camp => camp.isActive === false);
-      } else {
-        this.isCampaignsDummy = false;
-        this.campaigns = c;
-        this.activeCampaigns = c.filter(camp => camp.isActive !== false);
-        this.endedCampaigns = c.filter(camp => camp.isActive === false);
-      }
+      this.isCampaignsDummy = false;
+      this.campaigns = c || [];
+      this.activeCampaigns = this.campaigns.filter(camp => camp.isActive !== false);
+      this.endedCampaigns = this.campaigns.filter(camp => camp.isActive === false);
     });
   }
 
   endCampaign(id: string) {
-    if (this.isCampaignsDummy) {
-      // Handle dummy ending in frontend-only dev mode
-      const allDummies = [
-        { id: 'dummy-1', title: 'Save the Amazon Rainforest', description: 'Help us plant trees and protect wildlife.', targetAmount: 50000, isActive: true, totalAmountRaised: 12000 },
-        { id: 'dummy-2', title: 'Clean Water Initiative', description: 'Providing clean water to remote villages.', targetAmount: 25000, isActive: true, totalAmountRaised: 5000 },
-        { 
-          id: 'dummy-3', 
-          title: 'Ended Scholarship Fund', 
-          description: 'Providing tuition fees for underprivileged students.', 
-          targetAmount: 10000, 
-          isActive: false, 
-          totalAmountRaised: 10000,
-          donations: [
-            { id: 101, amount: 5000, timestamp: '2026-05-10T12:00:00Z', donorName: 'John Doe', donorEmail: 'john@example.com', isApproved: true },
-            { id: 102, amount: 5000, timestamp: '2026-05-11T14:30:00Z', donorName: 'Jane Smith', donorEmail: 'jane@example.com', isApproved: true }
-          ]
-        }
-      ];
-      const found = allDummies.find(x => x.id === id);
-      if (found) {
-        found.isActive = false;
-        found.donations = [
-          { id: 201, amount: 8000, timestamp: '2026-05-22T09:15:00Z', donorName: 'Alice Johnson', donorEmail: 'alice@example.com', isApproved: true },
-          { id: 202, amount: 4000, timestamp: '2026-05-22T10:45:00Z', donorName: 'Bob Smith', donorEmail: 'bob@example.com', isApproved: true }
-        ];
-      }
-      this.activeCampaigns = allDummies.filter(camp => camp.id !== id && camp.isActive !== false);
-      this.endedCampaigns = [
-        ...allDummies.filter(camp => camp.isActive === false),
-        ...(found ? [found] : [])
-      ];
-      return;
-    }
-
     if (confirm('Are you sure you want to end this campaign?')) {
       this.donationService.endCampaign(id).subscribe({
         next: () => {
-          this.loadCampaigns();
+          this.loadAllDataSilently();
           this.selectedEndedCampaign = null;
         },
         error: (err) => {
           console.error('Failed to end campaign:', err);
+        }
+      });
+    }
+  }
+
+  reactivateCampaign(campaign: CampaignDTO) {
+    if (confirm(`Are you sure you want to reactivate the campaign "${campaign.title}"?`)) {
+      this.donationService.reactivateCampaign(campaign.id.toString()).subscribe({
+        next: () => {
+          this.loadAllDataSilently();
+          this.selectedEndedCampaign = null;
+        },
+        error: (err) => {
+          console.error('Failed to reactivate campaign:', err);
+          alert(err.error?.message || 'Failed to reactivate campaign.');
         }
       });
     }
@@ -158,7 +152,7 @@ export class AdminDashboardComponent implements OnInit {
 
   onCampaignCreated() {
     this.showCreateCampaignModal = false;
-    this.loadCampaigns();
+    this.loadAllDataSilently();
   }
 
   openReview(alert: AlertDTO) {
@@ -171,8 +165,8 @@ export class AdminDashboardComponent implements OnInit {
 
   onReviewed() {
     this.selectedAlert = null;
-    // Refresh alerts
-    this.fraudService.getRecentAlerts().subscribe(a => this.alerts = a);
+    // Instantly refresh all data to update stats and campaigns raised amount
+    this.loadAllDataSilently();
   }
 
   getRiskClass(score: number): string {

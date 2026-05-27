@@ -4,6 +4,7 @@ using DonationFraud.API.FraudEngine;
 using DonationFraud.API.Data;
 using DonationFraud.API.Repositories;
 using DonationFraud.API.Services;
+using DonationFraud.API.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -168,8 +169,21 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<DonationDbContext>();
-    // Make sure to apply migrations or create DB
-    dbContext.Database.Migrate();
+    
+    try
+    {
+        // Apply migrations or create DB
+        dbContext.Database.Migrate();
+
+        // Perform a quick check to see if the schema is healthy and has IsActive column
+        _ = dbContext.Campaigns.Select(c => c.IsActive).FirstOrDefault();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Database schema mismatch detected: {ex.Message}. Recreating database to sync schema...");
+        dbContext.Database.EnsureDeleted();
+        dbContext.Database.Migrate();
+    }
 
     if (!dbContext.FraudRuleConfigs.Any())
     {
@@ -195,6 +209,77 @@ using (var scope = app.Services.CreateScope())
             Password = "admin",
             Role = "Admin"
         });
+    }
+
+    var donorExists = await userRepo.GetUserByUsernameAsync("donor@mail.com");
+    User donorUser;
+    if (donorExists == null)
+    {
+        var authService = scope.ServiceProvider.GetRequiredService<IAuthService>();
+        await authService.RegisterAsync(new DonationFraud.API.DTOs.RegisterRequestDto
+        {
+            Username = "donor@mail.com",
+            Email = "donor@mail.com",
+            FirstName = "John",
+            LastName = "Doe",
+            Password = "password",
+            Role = "User"
+        });
+        donorUser = await userRepo.GetUserByUsernameAsync("donor@mail.com") 
+            ?? throw new InvalidOperationException("Failed to register donor user.");
+    }
+    else
+    {
+        donorUser = donorExists;
+    }
+
+    if (!dbContext.Campaigns.Any())
+    {
+        var campaign1 = new Campaign
+        {
+            Title = "Save the Amazon Rainforest",
+            Description = "Help us plant trees and protect wildlife.",
+            TargetAmount = 50000,
+            IsActive = true
+        };
+        var campaign2 = new Campaign
+        {
+            Title = "Clean Water Initiative",
+            Description = "Providing clean water to remote villages.",
+            TargetAmount = 25000,
+            IsActive = true
+        };
+        var campaign3 = new Campaign
+        {
+            Title = "Ended Scholarship Fund",
+            Description = "Providing tuition fees for underprivileged students.",
+            TargetAmount = 10000,
+            IsActive = false
+        };
+
+        dbContext.Campaigns.AddRange(campaign1, campaign2, campaign3);
+        await dbContext.SaveChangesAsync();
+
+        // Seed some donations for campaign3
+        var donation1 = new Donation
+        {
+            CampaignId = campaign3.Id,
+            UserId = donorUser.Id,
+            Amount = 5000,
+            Timestamp = DateTime.UtcNow.AddDays(-5),
+            IpAddress = "127.0.0.1"
+        };
+        var donation2 = new Donation
+        {
+            CampaignId = campaign3.Id,
+            UserId = donorUser.Id,
+            Amount = 5000,
+            Timestamp = DateTime.UtcNow.AddDays(-4),
+            IpAddress = "127.0.0.1"
+        };
+
+        dbContext.Donations.AddRange(donation1, donation2);
+        await dbContext.SaveChangesAsync();
     }
 }
 

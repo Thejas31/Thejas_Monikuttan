@@ -1,9 +1,13 @@
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
+using DonationFraud.API.Data;
 
 #nullable disable
 
 namespace DonationFraud.API.Migrations
 {
+    [DbContext(typeof(DonationDbContext))]
+    [Migration("20260523000000_AddIsActiveToCampaign")]
     /// <inheritdoc />
     public partial class AddIsActiveToCampaign : Migration
     {

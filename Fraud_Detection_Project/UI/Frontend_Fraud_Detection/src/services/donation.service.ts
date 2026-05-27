@@ -50,4 +50,8 @@ export class DonationService {
   endCampaign(id: string): Observable<any> {
     return this.http.put<any>(`${environment.apiUrl}/campaigns/${id}/end`, {});
   }
+
+  reactivateCampaign(id: string): Observable<any> {
+    return this.http.put<any>(`${environment.apiUrl}/campaigns/${id}/reactivate`, {});
+  }
 }

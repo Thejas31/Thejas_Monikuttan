@@ -48,6 +48,28 @@ namespace DonationFraud.API.Services
             return true;
         }
 
+        public async Task<bool> ReactivateCampaignAsync(int id)
+        {
+            var campaign = await _campaignRepo.GetCampaignByIdAsync(id);
+            if (campaign == null) return false;
+
+            // Calculate total raised amount (only count successful / non-blocked donations)
+            var totalRaised = campaign.Donations?
+                .Where(d => d.FraudFlag == null || 
+                            d.FraudFlag.IsApproved == true || 
+                            (d.FraudFlag.IsApproved == null && d.FraudFlag.RiskLevel != Enums.RiskLevel.High))
+                .Sum(d => d.Amount) ?? 0;
+
+            if (totalRaised >= campaign.TargetAmount)
+            {
+                throw new System.InvalidOperationException("Cannot reactivate: Campaign has already reached its target donation amount.");
+            }
+
+            campaign.IsActive = true;
+            await _campaignRepo.SaveChangesAsync();
+            return true;
+        }
+
         private static CampaignResponseDto MapToDto(Campaign c) => new()
         {
             Id = c.Id,
@@ -56,7 +78,11 @@ namespace DonationFraud.API.Services
             TargetAmount = c.TargetAmount,
             CreatedAt = c.CreatedAt,
             TotalDonations = c.Donations?.Count ?? 0,
-            TotalAmountRaised = c.Donations?.Sum(d => d.Amount) ?? 0,
+            TotalAmountRaised = c.Donations?
+                .Where(d => d.FraudFlag == null || 
+                            d.FraudFlag.IsApproved == true || 
+                            (d.FraudFlag.IsApproved == null && d.FraudFlag.RiskLevel != Enums.RiskLevel.High))
+                .Sum(d => d.Amount) ?? 0,
             IsActive = c.IsActive,
             Donations = c.Donations?.Select(d => new CampaignDonationDto
             {

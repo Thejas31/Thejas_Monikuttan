@@ -54,5 +54,24 @@ namespace DonationFraud.API.Controllers
             }
             return Ok(new { Message = "Campaign ended successfully." });
         }
+
+        [HttpPut("{id}/reactivate")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ReactivateCampaign(int id)
+        {
+            try
+            {
+                var success = await _campaignService.ReactivateCampaignAsync(id);
+                if (!success)
+                {
+                    return NotFound("Campaign not found.");
+                }
+                return Ok(new { Message = "Campaign reactivated successfully." });
+            }
+            catch (System.InvalidOperationException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
     }
 }

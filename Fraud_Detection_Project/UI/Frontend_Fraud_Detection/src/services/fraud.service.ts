@@ -12,12 +12,17 @@ export class FraudService {
   constructor(private http: HttpClient) {}
 
   getDashboardStats(): Observable<DashboardStatsDTO> {
-    return of({
-      totalDonations: '₹12.8L',
-      transactionsToday: 486,
-      flaggedDonations: 23,
-      confirmedFraud: 7
-    });
+    return this.http.get<DashboardStatsDTO>(`${environment.apiUrl}/fraud/stats`).pipe(
+      catchError(err => {
+        console.error('Failed to load dashboard stats:', err.message || err);
+        return of({
+          totalDonations: '₹0',
+          transactionsToday: 0,
+          flaggedDonations: 0,
+          confirmedFraud: 0
+        });
+      })
+    );
   }
 
   getRecentAlerts(): Observable<AlertDTO[]> {

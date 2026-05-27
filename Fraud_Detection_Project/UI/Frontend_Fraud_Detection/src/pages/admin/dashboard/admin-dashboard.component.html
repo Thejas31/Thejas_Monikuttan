@@ -155,12 +155,8 @@
         <div>
           <h2 class="text-white font-semibold flex items-center gap-2">
             Active Campaigns
-            <span *ngIf="isCampaignsDummy" class="px-2 py-0.5 rounded-md bg-status-warning/20 text-status-warning text-[10px] uppercase font-bold tracking-wider border border-status-warning/30">
-              Dummy Data
-            </span>
           </h2>
-          <p class="text-slate-400 text-xs mt-0.5" *ngIf="!isCampaignsDummy">Currently running fundraising campaigns</p>
-          <p class="text-status-warning/80 text-xs mt-0.5" *ngIf="isCampaignsDummy">No real campaigns found. Showing dummy values for representation.</p>
+          <p class="text-slate-400 text-xs mt-0.5">Currently running fundraising campaigns</p>
         </div>
       </div>
 
@@ -227,9 +223,33 @@
           <h3 class="text-white font-bold text-lg">Campaign Performance: {{ selectedEndedCampaign.title }}</h3>
           <p class="text-slate-400 text-xs mt-0.5">Donations and donors breakdown for this campaign</p>
         </div>
-        <button (click)="selectedEndedCampaign = null" class="text-slate-400 hover:text-white text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 transition-colors">
-          Close Details
-        </button>
+        <div class="flex items-center gap-3">
+          <!-- Reactivate Campaign Button -->
+          <button 
+            *ngIf="selectedEndedCampaign && (selectedEndedCampaign.totalAmountRaised ?? 0) < (selectedEndedCampaign.targetAmount ?? 0)"
+            (click)="reactivateCampaign(selectedEndedCampaign)" 
+            class="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold py-1.5 px-3 rounded-lg shadow-lg shadow-emerald-500/20 transition-all duration-200 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89" />
+            </svg>
+            Reactivate Campaign
+          </button>
+          
+          <!-- Reactivation Disabled Button -->
+          <span 
+            *ngIf="selectedEndedCampaign && (selectedEndedCampaign.totalAmountRaised ?? 0) >= (selectedEndedCampaign.targetAmount ?? 0)"
+            class="bg-slate-800 text-slate-500 text-xs font-semibold py-1.5 px-3 rounded-lg border border-slate-700 cursor-not-allowed flex items-center gap-1.5"
+            title="Target reached. Cannot reactivate.">
+            <svg class="w-3.5 h-3.5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            Target Reached
+          </span>
+
+          <button (click)="selectedEndedCampaign = null" class="text-slate-400 hover:text-white text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 transition-colors">
+            Close Details
+          </button>
+        </div>
       </div>
 
       <div class="p-6">

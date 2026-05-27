@@ -31,10 +31,14 @@ namespace DonationFraud.API.Repositories
         public async Task<Campaign?> GetCampaignByIdAsync(int id) => await _context.Campaigns
             .Include(c => c.Donations)
                 .ThenInclude(d => d.User)
+            .Include(c => c.Donations)
+                .ThenInclude(d => d.FraudFlag)
             .FirstOrDefaultAsync(c => c.Id == id);
         public async Task<IEnumerable<Campaign>> GetAllCampaignsAsync() => await _context.Campaigns
             .Include(c => c.Donations)
                 .ThenInclude(d => d.User)
+            .Include(c => c.Donations)
+                .ThenInclude(d => d.FraudFlag)
             .ToListAsync();
         public async Task AddCampaignAsync(Campaign campaign) => await _context.Campaigns.AddAsync(campaign);
         public async Task SaveChangesAsync() => await _context.SaveChangesAsync();

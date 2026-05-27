@@ -18,6 +18,13 @@ namespace DonationFraud.API.Controllers
             _fraudService = fraudService;
         }
 
+        [HttpGet("stats")]
+        public async Task<IActionResult> GetDashboardStats()
+        {
+            var stats = await _fraudService.GetDashboardStatsAsync();
+            return Ok(stats);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAllFraudAlerts()
         {

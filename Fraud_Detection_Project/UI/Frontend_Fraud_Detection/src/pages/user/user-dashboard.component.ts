@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DonationService } from '../../services/donation.service';
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   imports: [CommonModule, FormsModule],
   templateUrl: './user-dashboard.component.html',
 })
-export class UserDashboardComponent implements OnInit {
+export class UserDashboardComponent implements OnInit, OnDestroy {
   Math = Math;
   activeTab: 'dashboard' | 'make-donations' | 'my-donations' = 'dashboard';
   myDonations: MyDonationDTO[] = [];
@@ -26,6 +26,7 @@ export class UserDashboardComponent implements OnInit {
   totalCampaignsSupported = 0;
   isLoading = false;
   isSubmitting = false;
+  private pollInterval: any;
 
   // Confirmation modal
   showConfirmModal = false;
@@ -65,11 +66,66 @@ export class UserDashboardComponent implements OnInit {
       this.userId = user.id;
       this.donation.donorName = this.userFullName;
       this.donation.donorEmail = this.userEmail;
-      this.fetchMyDonations();
+      this.loadAllData();
     }
 
-    this.donationService.getCampaigns().subscribe(c => {
-      this.campaigns = c ? c.filter(camp => camp.isActive !== false) : [];
+    // Live background polling every 5 seconds to keep dashboard and campaigns updated in real-time
+    this.pollInterval = setInterval(() => {
+      this.loadAllDataSilently();
+    }, 5000);
+  }
+
+  ngOnDestroy() {
+    if (this.pollInterval) {
+      clearInterval(this.pollInterval);
+    }
+  }
+
+  loadAllData() {
+    this.isLoading = true;
+    this.loadAllDataSilently(() => {
+      this.isLoading = false;
+    });
+  }
+
+  loadAllDataSilently(callback?: () => void) {
+    let completed = 0;
+    const checkComplete = () => {
+      completed++;
+      if (completed === 2 && callback) {
+        callback();
+      }
+    };
+
+    if (this.userId) {
+      this.donationService.getUserDonations(this.userId).subscribe({
+        next: donations => {
+          this.myDonations = donations || [];
+          this.calculateStats();
+          checkComplete();
+        },
+        error: () => {
+          this.myDonations = [];
+          this.calculateStats();
+          checkComplete();
+        }
+      });
+    } else {
+      checkComplete();
+    }
+
+    this.donationService.getCampaigns().subscribe({
+      next: c => {
+        this.campaigns = c ? c.filter(camp => camp.isActive !== false) : [];
+        if (this.selectedCampaign) {
+          const updated = this.campaigns.find(camp => camp.id === this.selectedCampaign?.id);
+          if (updated) {
+            this.selectedCampaign = updated;
+          }
+        }
+        checkComplete();
+      },
+      error: () => checkComplete()
     });
   }
 
@@ -98,16 +154,27 @@ export class UserDashboardComponent implements OnInit {
     this.activeTab = tab;
     this.selectedCampaign = null;
     this.showConfirmModal = false;
-    // Refresh stats when switching to dashboard
     if (tab === 'dashboard' || tab === 'my-donations') {
-      this.fetchMyDonations();
+      this.loadAllDataSilently();
     }
   }
 
   selectCampaign(campaign: CampaignDTO) {
     this.selectedCampaign = campaign;
     this.donation.campaignId = campaign.id;
-    this.donation.amount = 0;
+    const remaining = (campaign.targetAmount ?? 0) - (campaign.totalAmountRaised ?? 0);
+    this.donation.amount = Math.min(1000, remaining);
+  }
+
+  onAmountChange() {
+    if (!this.selectedCampaign) return;
+    const remaining = (this.selectedCampaign.targetAmount ?? 0) - (this.selectedCampaign.totalAmountRaised ?? 0);
+    if (this.donation.amount > remaining) {
+      this.donation.amount = remaining;
+    }
+    if (this.donation.amount < 1) {
+      this.donation.amount = 1;
+    }
   }
 
   logout() {
@@ -115,7 +182,6 @@ export class UserDashboardComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  // Called when user clicks "Complete Donation" — validates and opens confirm modal
   onSubmit() {
     if (!this.donation.campaignId || !this.donation.amount || !this.donation.donorName) {
       this.showToast('Please fill in all required fields.', 'error');
@@ -125,10 +191,14 @@ export class UserDashboardComponent implements OnInit {
       this.showToast('Please enter a valid donation amount.', 'error');
       return;
     }
+    const remaining = (this.selectedCampaign?.targetAmount ?? 0) - (this.selectedCampaign?.totalAmountRaised ?? 0);
+    if (this.donation.amount > remaining) {
+      this.showToast(`Maximum allowed donation for this campaign is ₹${remaining.toLocaleString()}.`, 'error');
+      return;
+    }
     this.showConfirmModal = true;
   }
 
-  // User confirmed — execute the actual donation
   confirmDonation() {
     this.isSubmitting = true;
 
@@ -140,24 +210,21 @@ export class UserDashboardComponent implements OnInit {
           const donatedAmount = this.donation.amount;
           const campaignId = parseInt(this.donation.campaignId, 10);
 
-          // Optimistically update stats immediately (before API refresh completes)
           this.totalDonated += donatedAmount;
           const existingCampaign = this.myDonations.find(d => d.campaignId === campaignId);
           if (!existingCampaign) {
             this.totalCampaignsSupported++;
           }
 
-          // Reset form and navigate back
           this.donation.campaignId = '';
           this.donation.amount = 0;
           this.donation.message = '';
           this.selectedCampaign = null;
 
-          // Show success toast
           this.showToast('Donation made successfully!', 'success');
 
-          // Refresh from server to get accurate data
-          this.fetchMyDonations();
+          // Instantly reload all data to update campaign progress and history
+          this.loadAllDataSilently();
         }
       },
       error: () => {
@@ -168,20 +235,17 @@ export class UserDashboardComponent implements OnInit {
     });
   }
 
-  // User cancelled — close modal and show withheld toast
   cancelDonation() {
     this.showConfirmModal = false;
     this.showToast('Donation Withheld!', 'warning');
   }
 
   showToast(message: string, type: 'success' | 'warning' | 'error') {
-    // Cancel any pending timer
     if (this.toastTimer) {
       clearTimeout(this.toastTimer);
     }
     this.toastMessage = message;
     this.toastType = type;
-    // Auto-hide after 3.5 seconds
     this.toastTimer = setTimeout(() => {
       this.toastMessage = null;
     }, 3500);
