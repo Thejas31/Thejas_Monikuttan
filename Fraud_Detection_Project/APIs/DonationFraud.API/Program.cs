@@ -66,6 +66,8 @@ builder.Services.AddScoped<IDonationService, DonationService>();
 builder.Services.AddScoped<IFraudManagementService, FraudManagementService>();
 builder.Services.AddScoped<IFraudDetectionService, FraudDetectionService>();
 builder.Services.AddScoped<IAuditService, AuditService>();
+builder.Services.AddScoped<IMlInferenceService, MlInferenceService>();
+builder.Services.AddHttpClient();
 
 // Fraud Engine
 builder.Services.AddScoped<IFraudEvaluator, FraudEvaluator>();

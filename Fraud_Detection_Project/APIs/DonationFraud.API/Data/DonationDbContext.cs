@@ -14,6 +14,11 @@ namespace DonationFraud.API.Data
         public DbSet<FraudFlag> FraudFlags { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<FraudRuleConfig> FraudRuleConfigs { get; set; }
+        public DbSet<DeviceFingerprint> DeviceFingerprints { get; set; }
+        public DbSet<IpIntelligence> IpIntelligences { get; set; }
+        public DbSet<PaymentMethod> PaymentMethods { get; set; }
+        public DbSet<MlPrediction> MlPredictions { get; set; }
+        public DbSet<MlModelMetadata> MlModelMetadata { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,10 +36,34 @@ namespace DonationFraud.API.Data
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Donation>()
+                .HasOne(d => d.DeviceFingerprint)
+                .WithMany()
+                .HasForeignKey(d => d.DeviceFingerprintId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Donation>()
+                .HasOne(d => d.IpIntelligence)
+                .WithMany()
+                .HasForeignKey(d => d.IpIntelligenceId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Donation>()
+                .HasOne(d => d.PaymentMethod)
+                .WithMany()
+                .HasForeignKey(d => d.PaymentMethodId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             modelBuilder.Entity<FraudFlag>()
                 .HasOne(f => f.Donation)
                 .WithOne(d => d.FraudFlag)
                 .HasForeignKey<FraudFlag>(f => f.DonationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<MlPrediction>()
+                .HasOne(p => p.Donation)
+                .WithMany()
+                .HasForeignKey(p => p.DonationId)
                 .OnDelete(DeleteBehavior.Cascade);
                 
             modelBuilder.Entity<User>()
@@ -44,6 +73,9 @@ namespace DonationFraud.API.Data
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Username)
                 .IsUnique();
+
+            modelBuilder.Entity<PaymentMethod>()
+                .HasIndex(p => p.Fingerprint);
         }
     }
 }

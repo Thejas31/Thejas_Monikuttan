@@ -52,12 +52,53 @@ namespace DonationFraud.API.Services
                 return new ProcessDonationResult { IsSuccess = false, Reason = "This campaign is inactive." };
             }
 
+            // Create mock telemetry for testing feature extraction
+            var deviceFp = new DeviceFingerprint
+            {
+                UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                ScreenResolution = "1920x1080",
+                Language = "en-US",
+                CanvasHash = "canvas_" + Guid.NewGuid().ToString().Substring(0, 8),
+                Os = "Windows 10",
+                DeviceType = "Desktop"
+            };
+            _context.DeviceFingerprints.Add(deviceFp);
+
+            // Simulate VPN/Proxy for localhost/local IPs for testing
+            var isLocal = request.IpAddress == "127.0.0.1" || request.IpAddress == "::1" || request.IpAddress == "Unknown";
+            var ipIntel = new IpIntelligence
+            {
+                CountryCode = isLocal ? "US" : "IN",
+                City = isLocal ? "New York" : "Mumbai",
+                Latitude = isLocal ? 40.7128 : 19.0760,
+                Longitude = isLocal ? -74.0060 : 72.8777,
+                Isp = "Localhost Network",
+                IsVpnOrProxy = isLocal,
+                CheckedAt = DateTime.UtcNow
+            };
+            _context.IpIntelligences.Add(ipIntel);
+
+            var payMethod = new PaymentMethod
+            {
+                MaskedCardNumber = "411111XXXXXX1111",
+                CardBrand = "Visa",
+                BankCountryCode = "IN", // Card bank in India, causing country mismatch if IP is local/US
+                ThreeDSecureSuccess = true,
+                Fingerprint = "card_fp_" + request.UserId // same card fingerprint for same user to test velocity
+            };
+            _context.PaymentMethods.Add(payMethod);
+
+            await _context.SaveChangesAsync();
+
             var donation = new Donation
             {
                 CampaignId = request.CampaignId,
                 UserId = request.UserId,
                 Amount = request.Amount,
-                IpAddress = request.IpAddress
+                IpAddress = request.IpAddress,
+                DeviceFingerprintId = deviceFp.Id,
+                IpIntelligenceId = ipIntel.Id,
+                PaymentMethodId = payMethod.Id
             };
 
             // Save donation first to get ID

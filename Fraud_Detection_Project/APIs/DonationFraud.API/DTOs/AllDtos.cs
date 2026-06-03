@@ -49,4 +49,12 @@ namespace DonationFraud.API.Models
         public int? DonationId { get; set; }
         public string Reason { get; set; } = string.Empty;
     }
+
+    public class MlPredictionResult
+    {
+        public int RiskScore { get; set; }
+        public string RiskLevel { get; set; } = "Low";
+        public string ModelVersion { get; set; } = "Mock_v1";
+        public string TopFeaturesImpact { get; set; } = "{}";
+    }
 }
