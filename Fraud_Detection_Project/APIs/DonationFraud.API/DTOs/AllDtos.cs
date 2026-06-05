@@ -57,4 +57,11 @@ namespace DonationFraud.API.Models
         public string ModelVersion { get; set; } = "Mock_v1";
         public string TopFeaturesImpact { get; set; } = "{}";
     }
+
+    public class FastApiPredictionResponseDto
+    {
+        public double Probability { get; set; }
+        public int RiskScore { get; set; }
+        public bool IsFraud { get; set; }
+    }
 }

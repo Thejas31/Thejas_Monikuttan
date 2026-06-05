@@ -125,18 +125,115 @@ namespace DonationFraud.API.Services
 
             var amountRatio = averageDonation > 0 ? (double)donation.Amount / averageDonation : 1.0;
 
-            // Compile engineered feature vector
+            // Feature translation calculation for XGBoost
+            double card1 = paymentMethod != null ? Math.Abs(paymentMethod.Fingerprint.GetHashCode()) % 100000 : -999.0;
+            
+            double card2 = -999.0;
+            if (paymentMethod != null)
+            {
+                var brand = paymentMethod.CardBrand.ToLower();
+                if (brand.Contains("visa")) card2 = 111.0;
+                else if (brand.Contains("mastercard") || brand.Contains("master")) card2 = 222.0;
+                else if (brand.Contains("amex") || brand.Contains("american")) card2 = 333.0;
+                else if (brand.Contains("discover")) card2 = 444.0;
+                else card2 = Math.Abs(paymentMethod.CardBrand.GetHashCode()) % 1000;
+            }
+
+            double card3 = paymentMethod != null && !string.IsNullOrEmpty(paymentMethod.BankCountryCode) 
+                ? Math.Abs(paymentMethod.BankCountryCode.GetHashCode()) % 1000 
+                : -999.0;
+
+            double card5 = paymentMethod != null ? (paymentMethod.ThreeDSecureSuccess ? 100.0 : 0.0) : -999.0;
+
+            double addr1 = ipIntelligence != null && !string.IsNullOrEmpty(ipIntelligence.City) 
+                ? Math.Abs(ipIntelligence.City.GetHashCode()) % 1000 
+                : -999.0;
+
+            double addr2 = ipIntelligence != null && !string.IsNullOrEmpty(ipIntelligence.CountryCode) 
+                ? Math.Abs(ipIntelligence.CountryCode.GetHashCode()) % 1000 
+                : -999.0;
+
+            double dist1 = distanceKm > 0 ? distanceKm : -999.0;
+
+            double id01 = ipIntelligence != null && ipIntelligence.IsVpnOrProxy ? -100.0 : 0.0;
+            double id02 = isScreenOsMismatch ? 999.0 : 0.0;
+
+            double deviceTypeVal = -999.0;
+            if (deviceFingerprint != null)
+            {
+                var type = deviceFingerprint.DeviceType.ToLower();
+                if (type.Contains("desktop")) deviceTypeVal = 1.0;
+                else if (type.Contains("mobile")) deviceTypeVal = 2.0;
+                else deviceTypeVal = 3.0;
+            }
+
+            double deviceInfoVal = -999.0;
+            if (deviceFingerprint != null)
+            {
+                var os = deviceFingerprint.Os.ToLower();
+                if (os.Contains("windows")) deviceInfoVal = 1.0;
+                else if (os.Contains("ios") || os.Contains("iphone") || os.Contains("ipad")) deviceInfoVal = 2.0;
+                else if (os.Contains("android")) deviceInfoVal = 3.0;
+                else if (os.Contains("mac") || os.Contains("osx")) deviceInfoVal = 4.0;
+                else if (os.Contains("linux")) deviceInfoVal = 5.0;
+                else deviceInfoVal = Math.Abs(deviceFingerprint.Os.GetHashCode()) % 50;
+            }
+
+            string emailDomain = "unknown";
+            if (user != null && !string.IsNullOrEmpty(user.Email))
+            {
+                var parts = user.Email.Split('@');
+                if (parts.Length > 1)
+                {
+                    emailDomain = parts[1].ToLower();
+                }
+            }
+
+            double pEmailDomainVal = -999.0;
+            if (emailDomain != "unknown")
+            {
+                if (emailDomain.Contains("gmail")) pEmailDomainVal = 12.0;
+                else if (emailDomain.Contains("yahoo")) pEmailDomainVal = 8.0;
+                else if (emailDomain.Contains("hotmail") || emailDomain.Contains("outlook")) pEmailDomainVal = 15.0;
+                else if (emailDomain.Contains("aol")) pEmailDomainVal = 3.0;
+                else pEmailDomainVal = Math.Abs(emailDomain.GetHashCode()) % 100;
+            }
+            double rEmailDomainVal = pEmailDomainVal;
+
+            // Compile 31-dimensional IEEE-CIS feature vector in exact order
             var features = new Dictionary<string, object>
             {
-                { "amount", (double)donation.Amount },
-                { "ip_count_5m", ipCount },
-                { "user_attempts_10m", userAttempts },
-                { "account_age_days", accountAgeDays },
-                { "card_count_1h", uniqueCardsCount },
-                { "distance_ip_to_card_km", distanceKm },
-                { "is_vpn_proxy", ipIntelligence?.IsVpnOrProxy ?? false },
-                { "screen_os_mismatch", isScreenOsMismatch },
-                { "amount_ratio_campaign_avg", amountRatio }
+                { "TransactionAmt", (double)donation.Amount },
+                { "card1", card1 },
+                { "card2", card2 },
+                { "card3", card3 },
+                { "card5", card5 },
+                { "addr1", addr1 },
+                { "addr2", addr2 },
+                { "dist1", dist1 },
+                { "dist2", -999.0 },
+                { "C1", (double)ipCount },
+                { "C2", (double)userAttempts },
+                { "C3", (double)uniqueCardsCount },
+                { "C4", -999.0 },
+                { "C5", -999.0 },
+                { "D1", accountAgeDays },
+                { "D2", -999.0 },
+                { "D3", -999.0 },
+                { "D4", -999.0 },
+                { "D5", -999.0 },
+                { "id_01", id01 },
+                { "id_02", id02 },
+                { "id_03", -999.0 },
+                { "id_04", -999.0 },
+                { "id_05", -999.0 },
+                { "id_06", -999.0 },
+                { "id_11", 100.0 },
+                { "id_13", -999.0 },
+                { "DeviceType", deviceTypeVal },
+                { "DeviceInfo", deviceInfoVal },
+                { "P_emaildomain", pEmailDomainVal },
+                { "R_emaildomain", rEmailDomainVal }
             };
 
             var featuresJson = JsonSerializer.Serialize(features);
@@ -154,11 +251,20 @@ namespace DonationFraud.API.Services
                     var response = await client.PostAsJsonAsync($"{mlServiceUrl}/predict", features);
                     if (response.IsSuccessStatusCode)
                     {
-                        var prediction = await response.Content.ReadFromJsonAsync<MlPredictionResult>();
-                        if (prediction != null)
+                        var apiResponse = await response.Content.ReadFromJsonAsync<FastApiPredictionResponseDto>();
+                        if (apiResponse != null)
                         {
-                            _logger.LogInformation("Received real-time AI Prediction from ML Microservice: RiskScore={Score}", prediction.RiskScore);
-                            return prediction;
+                            _logger.LogInformation("Received real-time AI Prediction from ML Microservice: RiskScore={Score}", apiResponse.RiskScore);
+                            return new MlPredictionResult
+                            {
+                                RiskScore = apiResponse.RiskScore,
+                                RiskLevel = apiResponse.IsFraud ? "High" : (apiResponse.RiskScore >= 30 ? "Medium" : "Low"),
+                                ModelVersion = "XGBoost_v1",
+                                TopFeaturesImpact = JsonSerializer.Serialize(new Dictionary<string, double>
+                                {
+                                    { "probability", apiResponse.Probability }
+                                })
+                            };
                         }
                     }
                 }
@@ -175,27 +281,27 @@ namespace DonationFraud.API.Services
             if (ipIntelligence != null && ipIntelligence.IsVpnOrProxy)
             {
                 simulatedRiskScore += 25;
-                impactDict.Add("is_vpn_proxy", +0.25);
+                impactDict.Add("id_01", +0.25);
             }
             if (uniqueCardsCount > 2)
             {
                 simulatedRiskScore += 30;
-                impactDict.Add("card_count_1h", +0.30);
+                impactDict.Add("C3", +0.30);
             }
             if (amountRatio > 5.0)
             {
                 simulatedRiskScore += 20;
-                impactDict.Add("amount_ratio_campaign_avg", +0.20);
+                impactDict.Add("TransactionAmt_ratio", +0.20);
             }
             if (isScreenOsMismatch)
             {
                 simulatedRiskScore += 15;
-                impactDict.Add("screen_os_mismatch", +0.15);
+                impactDict.Add("id_02", +0.15);
             }
             if (accountAgeDays < 1.0)
             {
                 simulatedRiskScore += 10;
-                impactDict.Add("account_age_days", +0.10);
+                impactDict.Add("D1", +0.10);
             }
 
             simulatedRiskScore = Math.Min(100, simulatedRiskScore);

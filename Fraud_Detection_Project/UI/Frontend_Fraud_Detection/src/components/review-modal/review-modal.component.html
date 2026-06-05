@@ -37,7 +37,7 @@
         [ngClass]="alert.riskScore >= 80 ? 'bg-status-danger/10 border border-status-danger/30' : alert.riskScore >= 60 ? 'bg-status-warning/10 border border-status-warning/30' : 'bg-status-success/10 border border-status-success/30'">
         <span class="text-sm font-medium"
           [ngClass]="alert.riskScore >= 80 ? 'text-status-danger' : alert.riskScore >= 60 ? 'text-status-warning' : 'text-status-success'">
-          {{ alert.riskScore >= 80 ? '🔴 High Risk' : alert.riskScore >= 60 ? '🟡 Medium Risk' : '🟢 Low Risk' }}
+          {{ alert.riskScore >= 80 ? ' High Risk' : alert.riskScore >= 60 ? ' Medium Risk' : ' Low Risk' }}
         </span>
         <span class="text-2xl font-bold"
           [ngClass]="alert.riskScore >= 80 ? 'text-status-danger' : alert.riskScore >= 60 ? 'text-status-warning' : 'text-status-success'">
@@ -85,9 +85,9 @@
         <select [(ngModel)]="decision" name="decision"
           class="w-full px-4 py-2.5 bg-slate-800/70 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-white text-sm transition-all">
           <option value="" disabled>Select a decision...</option>
-          <option value="Approve">✅ Approve – Transaction is legitimate</option>
-          <option value="Flag">🚩 Flag as Fraud – Block this transaction</option>
-          <option value="Escalate">⚠️ Escalate – Needs senior review</option>
+          <option value="Approve">Approve - Transaction is legitimate</option>
+          <option value="Flag">Flag as Fraud - Block this transaction</option>
+          <option value="Escalate">Escalate - Needs senior review</option>
         </select>
       </div>
 

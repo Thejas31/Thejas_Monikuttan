@@ -69,21 +69,43 @@ namespace DonationFraud.Tests.Services
     {
         private readonly Mock<API.FraudEngine.IFraudEvaluator> _evaluatorMock;
         private readonly Mock<IFraudFlagRepository> _flagRepoMock;
+        private readonly Mock<IMlInferenceService> _mlInferenceMock;
         private readonly Mock<IAuditService> _auditMock;
+        private readonly Mock<IConfiguration> _configMock;
+        private readonly API.Data.DonationDbContext _context;
         private readonly FraudDetectionService _service;
 
         public FraudDetectionServiceTests()
         {
             _evaluatorMock = new Mock<API.FraudEngine.IFraudEvaluator>();
             _flagRepoMock = new Mock<IFraudFlagRepository>();
+            _mlInferenceMock = new Mock<IMlInferenceService>();
             _auditMock = new Mock<IAuditService>();
+            _configMock = new Mock<IConfiguration>();
             var logger = new Mock<Microsoft.Extensions.Logging.ILogger<FraudDetectionService>>();
+
+            var dbOptions = new Microsoft.EntityFrameworkCore.DbContextOptionsBuilder<API.Data.DonationDbContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
+            _context = new API.Data.DonationDbContext(dbOptions);
 
             _flagRepoMock.Setup(r => r.AddFraudFlagAsync(It.IsAny<FraudFlag>())).Returns(Task.CompletedTask);
             _flagRepoMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
             _auditMock.Setup(a => a.LogActionAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>())).Returns(Task.CompletedTask);
 
-            _service = new FraudDetectionService(_evaluatorMock.Object, _flagRepoMock.Object, _auditMock.Object, logger.Object);
+            _configMock.Setup(c => c["FraudEngine:RulesWeight"]).Returns("0.4");
+            _configMock.Setup(c => c["FraudEngine:AiWeight"]).Returns("0.6");
+
+            _mlInferenceMock.Setup(m => m.GetMlPredictionAsync(It.IsAny<Donation>(), It.IsAny<int>()))
+                .ReturnsAsync(new MlPredictionResult { RiskScore = 0, RiskLevel = "Low", ModelVersion = "Mock_v1" });
+
+            _service = new FraudDetectionService(
+                _evaluatorMock.Object, 
+                _flagRepoMock.Object, 
+                _mlInferenceMock.Object, 
+                _context, 
+                _configMock.Object, 
+                _auditMock.Object, 
+                logger.Object);
         }
 
         [Fact]
@@ -104,6 +126,8 @@ namespace DonationFraud.Tests.Services
         {
             _evaluatorMock.Setup(e => e.EvaluateDonationAsync(It.IsAny<Donation>(), It.IsAny<int>()))
                 .ReturnsAsync(new API.FraudEngine.FraudResult { TotalRiskScore = 40, RiskLevel = RiskLevel.Medium, CombinedReasons = "HighFrequency" });
+            _mlInferenceMock.Setup(m => m.GetMlPredictionAsync(It.IsAny<Donation>(), It.IsAny<int>()))
+                .ReturnsAsync(new MlPredictionResult { RiskScore = 40, RiskLevel = "Medium", ModelVersion = "Mock_v1" });
 
             var donation = new Donation { Id = 2, Amount = 50, UserId = 1 };
             var result = await _service.EvaluateAndFlagDonationAsync(donation, 1);
@@ -117,6 +141,8 @@ namespace DonationFraud.Tests.Services
         {
             _evaluatorMock.Setup(e => e.EvaluateDonationAsync(It.IsAny<Donation>(), It.IsAny<int>()))
                 .ReturnsAsync(new API.FraudEngine.FraudResult { TotalRiskScore = 80, RiskLevel = RiskLevel.High, CombinedReasons = "Spike" });
+            _mlInferenceMock.Setup(m => m.GetMlPredictionAsync(It.IsAny<Donation>(), It.IsAny<int>()))
+                .ReturnsAsync(new MlPredictionResult { RiskScore = 80, RiskLevel = "High", ModelVersion = "Mock_v1" });
 
             var donation = new Donation { Id = 3, Amount = 50000, UserId = 1 };
             var result = await _service.EvaluateAndFlagDonationAsync(donation, 1);

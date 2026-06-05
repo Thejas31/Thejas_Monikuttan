@@ -12,22 +12,39 @@ namespace DonationFraud.Tests.Services
     public class DonationServiceTests
     {
         private readonly Mock<IDonationRepository> _donationRepoMock;
+        private readonly Mock<ICampaignRepository> _campaignRepoMock;
         private readonly Mock<IFraudDetectionService> _fraudDetectionMock;
         private readonly Mock<IAuditService> _auditMock;
+        private readonly API.Data.DonationDbContext _context;
         private readonly DonationService _service;
 
         public DonationServiceTests()
         {
             _donationRepoMock = new Mock<IDonationRepository>();
+            _campaignRepoMock = new Mock<ICampaignRepository>();
             _fraudDetectionMock = new Mock<IFraudDetectionService>();
             _auditMock = new Mock<IAuditService>();
             var logger = new Mock<ILogger<DonationService>>();
+
+            var dbOptions = new Microsoft.EntityFrameworkCore.DbContextOptionsBuilder<API.Data.DonationDbContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
+            _context = new API.Data.DonationDbContext(dbOptions);
 
             _donationRepoMock.Setup(r => r.AddDonationAsync(It.IsAny<Donation>())).Returns(Task.CompletedTask);
             _donationRepoMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
             _auditMock.Setup(a => a.LogActionAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>())).Returns(Task.CompletedTask);
 
-            _service = new DonationService(_donationRepoMock.Object, _fraudDetectionMock.Object, _auditMock.Object, logger.Object);
+            // Seed a campaign in in-memory db so ProcessDonationAsync doesn't return "Campaign not found"
+            _context.Campaigns.Add(new Campaign { Id = 1, Title = "Test Campaign", TargetAmount = 10000, IsActive = true });
+            _context.SaveChanges();
+
+            _service = new DonationService(
+                _donationRepoMock.Object, 
+                _campaignRepoMock.Object, 
+                _fraudDetectionMock.Object, 
+                _auditMock.Object, 
+                _context, 
+                logger.Object);
         }
 
         [Fact]
