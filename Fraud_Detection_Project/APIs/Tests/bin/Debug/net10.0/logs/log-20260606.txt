@@ -1,0 +1,115 @@
+2026-06-06 14:27:31.757 +05:30 [INF] Saved 0 entities to in-memory store.
+2026-06-06 14:27:32.208 +05:30 [INF] Saved 3 entities to in-memory store.
+2026-06-06 14:27:32.208 +05:30 [INF] Saved 3 entities to in-memory store.
+2026-06-06 14:27:32.208 +05:30 [INF] Saved 3 entities to in-memory store.
+2026-06-06 14:27:32.208 +05:30 [INF] Saved 3 entities to in-memory store.
+2026-06-06 14:27:32.354 +05:30 [INF] Saved 1 entities to in-memory store.
+2026-06-06 14:27:32.354 +05:30 [INF] Saved 1 entities to in-memory store.
+2026-06-06 14:27:32.354 +05:30 [INF] Saved 1 entities to in-memory store.
+2026-06-06 14:27:32.354 +05:30 [INF] Saved 1 entities to in-memory store.
+2026-06-06 14:27:32.358 +05:30 [INF] Saved 1 entities to in-memory store.
+2026-06-06 14:27:32.358 +05:30 [INF] Saved 1 entities to in-memory store.
+2026-06-06 14:27:32.358 +05:30 [INF] Saved 1 entities to in-memory store.
+2026-06-06 14:27:32.358 +05:30 [INF] Saved 1 entities to in-memory store.
+2026-06-06 14:27:32.364 +05:30 [INF] Saved 1 entities to in-memory store.
+2026-06-06 14:27:32.364 +05:30 [INF] Saved 1 entities to in-memory store.
+2026-06-06 14:27:32.364 +05:30 [INF] Saved 1 entities to in-memory store.
+2026-06-06 14:27:32.364 +05:30 [INF] Saved 1 entities to in-memory store.
+2026-06-06 14:27:32.365 +05:30 [INF] Saved 1 entities to in-memory store.
+2026-06-06 14:27:32.365 +05:30 [INF] Saved 1 entities to in-memory store.
+2026-06-06 14:27:32.365 +05:30 [INF] Saved 1 entities to in-memory store.
+2026-06-06 14:27:32.365 +05:30 [INF] Saved 1 entities to in-memory store.
+2026-06-06 14:27:32.376 +05:30 [INF] Saved 3 entities to in-memory store.
+2026-06-06 14:27:32.377 +05:30 [INF] Saved 3 entities to in-memory store.
+2026-06-06 14:27:32.377 +05:30 [INF] Saved 3 entities to in-memory store.
+2026-06-06 14:27:32.377 +05:30 [INF] Saved 3 entities to in-memory store.
+2026-06-06 14:27:32.378 +05:30 [INF] Saved 2 entities to in-memory store.
+2026-06-06 14:27:32.378 +05:30 [INF] Saved 2 entities to in-memory store.
+2026-06-06 14:27:32.378 +05:30 [INF] Saved 2 entities to in-memory store.
+2026-06-06 14:27:32.378 +05:30 [INF] Saved 2 entities to in-memory store.
+2026-06-06 14:27:32.423 +05:30 [INF] User profile is available. Using 'C:\Users\VICTUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-06 14:27:32.423 +05:30 [INF] User profile is available. Using 'C:\Users\VICTUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-06 14:27:32.423 +05:30 [INF] User profile is available. Using 'C:\Users\VICTUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-06 14:27:32.423 +05:30 [INF] User profile is available. Using 'C:\Users\VICTUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-06 14:27:32.534 +05:30 [INF] Creating key {252c4850-29b9-4dd8-b30d-f851bd4804c6} with creation date 2026-06-06 08:57:32Z, activation date 2026-06-08 14:36:46Z, and expiration date 2026-09-04 08:57:32Z.
+2026-06-06 14:27:32.534 +05:30 [INF] Creating key {9d717f4c-11d8-4945-ba7d-1202b3264111} with creation date 2026-06-06 08:57:32Z, activation date 2026-06-08 14:36:46Z, and expiration date 2026-09-04 08:57:32Z.
+2026-06-06 14:27:32.534 +05:30 [INF] Creating key {834e41d6-dc42-4e83-a08f-c1c78708ce98} with creation date 2026-06-06 08:57:32Z, activation date 2026-06-08 14:36:46Z, and expiration date 2026-09-04 08:57:32Z.
+2026-06-06 14:27:32.534 +05:30 [INF] Creating key {d909be95-a7e8-4b14-b01b-6bce31f7ce16} with creation date 2026-06-06 08:57:32Z, activation date 2026-06-08 14:36:46Z, and expiration date 2026-09-04 08:57:32Z.
+2026-06-06 14:27:32.549 +05:30 [INF] Writing data to file 'C:\Users\VICTUS\AppData\Local\ASP.NET\DataProtection-Keys\key-9d717f4c-11d8-4945-ba7d-1202b3264111.xml'.
+2026-06-06 14:27:32.549 +05:30 [INF] Writing data to file 'C:\Users\VICTUS\AppData\Local\ASP.NET\DataProtection-Keys\key-834e41d6-dc42-4e83-a08f-c1c78708ce98.xml'.
+2026-06-06 14:27:32.549 +05:30 [INF] Writing data to file 'C:\Users\VICTUS\AppData\Local\ASP.NET\DataProtection-Keys\key-d909be95-a7e8-4b14-b01b-6bce31f7ce16.xml'.
+2026-06-06 14:27:32.549 +05:30 [INF] Writing data to file 'C:\Users\VICTUS\AppData\Local\ASP.NET\DataProtection-Keys\key-252c4850-29b9-4dd8-b30d-f851bd4804c6.xml'.
+2026-06-06 14:27:32.668 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-06 14:27:32.668 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-06 14:27:32.668 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-06 14:27:32.668 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-06 14:27:32.668 +05:30 [INF] Hosting environment: Testing
+2026-06-06 14:27:32.669 +05:30 [INF] Hosting environment: Testing
+2026-06-06 14:27:32.668 +05:30 [INF] Hosting environment: Testing
+2026-06-06 14:27:32.669 +05:30 [INF] Content root path: D:\college work\Training-H&R Block Courses\Thejas_Monikuttan\Fraud_Detection_Project\APIs\DonationFraud.API
+2026-06-06 14:27:32.668 +05:30 [INF] Hosting environment: Testing
+2026-06-06 14:27:32.669 +05:30 [INF] Content root path: D:\college work\Training-H&R Block Courses\Thejas_Monikuttan\Fraud_Detection_Project\APIs\DonationFraud.API
+2026-06-06 14:27:32.669 +05:30 [INF] Content root path: D:\college work\Training-H&R Block Courses\Thejas_Monikuttan\Fraud_Detection_Project\APIs\DonationFraud.API
+2026-06-06 14:27:32.669 +05:30 [INF] Content root path: D:\college work\Training-H&R Block Courses\Thejas_Monikuttan\Fraud_Detection_Project\APIs\DonationFraud.API
+2026-06-06 14:27:32.733 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost/api/campaigns/999 - null null
+2026-06-06 14:27:32.733 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost/api/fraud/high-risk - null null
+2026-06-06 14:27:32.733 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost/api/donations - application/json; charset=utf-8 55
+2026-06-06 14:27:32.733 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost/api/auth/register - application/json; charset=utf-8 127
+2026-06-06 14:27:32.811 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-06-06 14:27:32.811 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-06-06 14:27:32.811 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-06-06 14:27:32.811 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-06-06 14:27:32.852 +05:30 [INF] Executing endpoint 'DonationFraud.API.Controllers.AuthController.Register (DonationFraud.API)'
+2026-06-06 14:27:32.852 +05:30 [INF] Executing endpoint 'DonationFraud.API.Controllers.CampaignsController.GetCampaign (DonationFraud.API)'
+2026-06-06 14:27:32.857 +05:30 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-06-06 14:27:32.857 +05:30 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin)
+2026-06-06 14:27:32.864 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-06-06 14:27:32.864 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-06-06 14:27:32.875 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost/api/fraud/high-risk - 401 null null 144.6422ms
+2026-06-06 14:27:32.875 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost/api/donations - 401 null null 144.6436ms
+2026-06-06 14:27:32.891 +05:30 [INF] Route matched with {action = "GetCampaign", controller = "Campaigns"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCampaign(Int32) on controller DonationFraud.API.Controllers.CampaignsController (DonationFraud.API).
+2026-06-06 14:27:32.891 +05:30 [INF] Route matched with {action = "Register", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Register(DonationFraud.API.DTOs.RegisterRequestDto) on controller DonationFraud.API.Controllers.AuthController (DonationFraud.API).
+2026-06-06 14:27:32.912 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost/api/donations/user/1 - null null
+2026-06-06 14:27:32.915 +05:30 [INF] Request starting HTTP/1.1 PUT http://localhost/api/fraud/1/review - application/json; charset=utf-8 38
+2026-06-06 14:27:32.919 +05:30 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-06-06 14:27:32.920 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-06-06 14:27:32.921 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost/api/donations/user/1 - 401 null null 9.4065ms
+2026-06-06 14:27:32.923 +05:30 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin)
+2026-06-06 14:27:32.924 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-06-06 14:27:32.924 +05:30 [INF] Request finished HTTP/1.1 PUT http://localhost/api/fraud/1/review - 401 null null 9.3165ms
+2026-06-06 14:27:32.929 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost/api/fraud - null null
+2026-06-06 14:27:32.931 +05:30 [INF] Application is shutting down...
+2026-06-06 14:27:32.939 +05:30 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin)
+2026-06-06 14:27:32.939 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-06-06 14:27:32.940 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost/api/fraud - 401 null null 11.1118ms
+2026-06-06 14:27:32.943 +05:30 [INF] Application is shutting down...
+2026-06-06 14:27:32.957 +05:30 [INF] Saved 1 entities to in-memory store.
+2026-06-06 14:27:32.964 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-06-06 14:27:32.979 +05:30 [INF] Executed action DonationFraud.API.Controllers.AuthController.Register (DonationFraud.API) in 80.2098ms
+2026-06-06 14:27:32.979 +05:30 [INF] Executed endpoint 'DonationFraud.API.Controllers.AuthController.Register (DonationFraud.API)'
+2026-06-06 14:27:32.982 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost/api/auth/register - 200 null application/json; charset=utf-8 251.895ms
+2026-06-06 14:27:32.982 +05:30 [INF] Executing ObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ProblemDetails'.
+2026-06-06 14:27:32.989 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost/api/auth/login - application/json; charset=utf-8 51
+2026-06-06 14:27:32.992 +05:30 [INF] Executing endpoint 'DonationFraud.API.Controllers.AuthController.Login (DonationFraud.API)'
+2026-06-06 14:27:33.003 +05:30 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(DonationFraud.API.DTOs.LoginRequestDto) on controller DonationFraud.API.Controllers.AuthController (DonationFraud.API).
+2026-06-06 14:27:33.011 +05:30 [INF] Executed action DonationFraud.API.Controllers.CampaignsController.GetCampaign (DonationFraud.API) in 118.1131ms
+2026-06-06 14:27:33.011 +05:30 [INF] Executed endpoint 'DonationFraud.API.Controllers.CampaignsController.GetCampaign (DonationFraud.API)'
+2026-06-06 14:27:33.011 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost/api/campaigns/999 - 404 null application/problem+json; charset=utf-8 281.2956ms
+2026-06-06 14:27:33.012 +05:30 [INF] Executing UnauthorizedObjectResult, writing value of type 'System.String'.
+2026-06-06 14:27:33.015 +05:30 [INF] Executed action DonationFraud.API.Controllers.AuthController.Login (DonationFraud.API) in 11.1202ms
+2026-06-06 14:27:33.015 +05:30 [INF] Executed endpoint 'DonationFraud.API.Controllers.AuthController.Login (DonationFraud.API)'
+2026-06-06 14:27:33.015 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost/api/auth/login - 401 null text/plain; charset=utf-8 25.8989ms
+2026-06-06 14:27:33.016 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost/api/campaigns - null null
+2026-06-06 14:27:33.018 +05:30 [INF] Application is shutting down...
+2026-06-06 14:27:33.019 +05:30 [INF] Executing endpoint 'DonationFraud.API.Controllers.CampaignsController.GetCampaigns (DonationFraud.API)'
+2026-06-06 14:27:33.029 +05:30 [INF] Route matched with {action = "GetCampaigns", controller = "Campaigns"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCampaigns() on controller DonationFraud.API.Controllers.CampaignsController (DonationFraud.API).
+2026-06-06 14:27:33.099 +05:30 [INF] Executing OkObjectResult, writing value of type 'System.Linq.Enumerable+ListSelectIterator`2[[DonationFraud.API.Entities.Campaign, DonationFraud.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[DonationFraud.API.DTOs.CampaignResponseDto, DonationFraud.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-06-06 14:27:33.161 +05:30 [INF] Executed action DonationFraud.API.Controllers.CampaignsController.GetCampaigns (DonationFraud.API) in 132.4061ms
+2026-06-06 14:27:33.161 +05:30 [INF] Executed endpoint 'DonationFraud.API.Controllers.CampaignsController.GetCampaigns (DonationFraud.API)'
+2026-06-06 14:27:33.162 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost/api/campaigns - 200 null application/json; charset=utf-8 146.0095ms
+2026-06-06 14:27:33.165 +05:30 [INF] Application is shutting down...

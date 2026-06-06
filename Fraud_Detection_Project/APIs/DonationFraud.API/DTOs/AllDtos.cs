@@ -63,5 +63,6 @@ namespace DonationFraud.API.Models
         public double Probability { get; set; }
         public int RiskScore { get; set; }
         public bool IsFraud { get; set; }
+        public System.Collections.Generic.Dictionary<string, double> TopFeatures { get; set; } = new();
     }
 }

@@ -244,7 +244,7 @@ namespace DonationFraud.API.Services
                 if (!string.IsNullOrEmpty(mlServiceUrl))
                 {
                     var client = _httpClientFactory.CreateClient("MlService");
-                    client.Timeout = TimeSpan.FromMilliseconds(800); // Quick timeout to prevent UI lag
+                    client.Timeout = TimeSpan.FromMilliseconds(3000); // Allow time for cold starts (e.g. JIT compilation)
 
                     var response = await client.PostAsJsonAsync($"{mlServiceUrl}/predict", features);
                     if (response.IsSuccessStatusCode)
@@ -258,10 +258,7 @@ namespace DonationFraud.API.Services
                                 RiskScore = apiResponse.RiskScore,
                                 RiskLevel = apiResponse.IsFraud ? "High" : (apiResponse.RiskScore >= 30 ? "Medium" : "Low"),
                                 ModelVersion = "XGBoost_v1",
-                                TopFeaturesImpact = JsonSerializer.Serialize(new Dictionary<string, double>
-                                {
-                                    { "probability", apiResponse.Probability }
-                                })
+                                TopFeaturesImpact = JsonSerializer.Serialize(apiResponse.TopFeatures)
                             };
                         }
                     }
