@@ -172,19 +172,26 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<DonationDbContext>();
     
-    try
+    if (dbContext.Database.ProviderName == "Microsoft.EntityFrameworkCore.InMemory")
     {
-        // Apply migrations or create DB
-        dbContext.Database.Migrate();
-
-        // Perform a quick check to see if the schema is healthy and has IsActive column
-        _ = dbContext.Campaigns.Select(c => c.IsActive).FirstOrDefault();
+        dbContext.Database.EnsureCreated();
     }
-    catch (Exception ex)
+    else
     {
-        Console.WriteLine($"Database schema mismatch detected: {ex.Message}. Recreating database to sync schema...");
-        dbContext.Database.EnsureDeleted();
-        dbContext.Database.Migrate();
+        try
+        {
+            // Apply migrations or create DB
+            dbContext.Database.Migrate();
+
+            // Perform a quick check to see if the schema is healthy and has IsActive column
+            _ = dbContext.Campaigns.Select(c => c.IsActive).FirstOrDefault();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Database schema mismatch detected: {ex.Message}. Recreating database to sync schema...");
+            dbContext.Database.EnsureDeleted();
+            dbContext.Database.Migrate();
+        }
     }
 
     if (!dbContext.FraudRuleConfigs.Any())

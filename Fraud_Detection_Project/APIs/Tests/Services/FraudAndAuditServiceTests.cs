@@ -1,8 +1,10 @@
 using DonationFraud.API.Entities;
 using DonationFraud.API.Enums;
 using DonationFraud.API.Interfaces;
+using DonationFraud.API.Models;
 using DonationFraud.API.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Xunit;
 
@@ -12,6 +14,7 @@ namespace DonationFraud.Tests.Services
     {
         private readonly Mock<IFraudFlagRepository> _repoMock;
         private readonly Mock<IAuditService> _auditMock;
+        private readonly API.Data.DonationDbContext _context;
         private readonly FraudManagementService _service;
 
         public FraudManagementServiceTests()
@@ -20,7 +23,12 @@ namespace DonationFraud.Tests.Services
             _auditMock = new Mock<IAuditService>();
             _auditMock.Setup(a => a.LogActionAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>())).Returns(Task.CompletedTask);
             _repoMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
-            _service = new FraudManagementService(_repoMock.Object, _auditMock.Object);
+
+            var dbOptions = new Microsoft.EntityFrameworkCore.DbContextOptionsBuilder<API.Data.DonationDbContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
+            _context = new API.Data.DonationDbContext(dbOptions);
+
+            _service = new FraudManagementService(_repoMock.Object, _auditMock.Object, _context);
         }
 
         [Fact]

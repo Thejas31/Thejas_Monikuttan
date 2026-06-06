@@ -83,13 +83,13 @@ namespace DonationFraud.Tests.Services
             _loggerMock.Setup(x => x.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Extracted ML Features")),
+                It.Is<It.IsAnyType>((v, t) => v != null && v.ToString()!.Contains("Extracted ML Features")),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()
             )).Callback<LogLevel, EventId, object, Exception?, object>((level, id, state, ex, func) =>
             {
                 // The state is a FormattedLogValues containing our parameters
-                capturedFeaturesJson = state.ToString();
+                capturedFeaturesJson = state?.ToString() ?? string.Empty;
             });
 
             // Act
@@ -102,7 +102,7 @@ namespace DonationFraud.Tests.Services
 
             // Verify features logged
             Assert.Contains("1500", capturedFeaturesJson); // TransactionAmt matches amount
-            Assert.Contains("testuser@gmail.com", user.Email); // Verify domain extraction works
+            Assert.Contains("testuser@gmail.com", user.Email ?? ""); // Verify domain extraction works
 
             // Parse features JSON from logger to verify elements
             var logPrefix = "Extracted ML Features for Donation 100: ";
@@ -110,7 +110,7 @@ namespace DonationFraud.Tests.Services
             if (startIndex >= 0)
             {
                 var jsonPart = capturedFeaturesJson.Substring(startIndex + logPrefix.Length);
-                var features = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonPart);
+                var features = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonPart) ?? new Dictionary<string, object>();
 
                 Assert.NotNull(features);
                 Assert.True(features.ContainsKey("TransactionAmt"));

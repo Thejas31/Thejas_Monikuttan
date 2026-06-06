@@ -3,6 +3,7 @@ using DonationFraud.API.Entities;
 using DonationFraud.API.Interfaces;
 using DonationFraud.API.Models;
 using DonationFraud.API.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;

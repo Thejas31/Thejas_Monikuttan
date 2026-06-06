@@ -18,7 +18,7 @@ namespace DonationFraud.Tests.Controllers
         }
 
         [Fact]
-        public async Task GetCampaigns_ReturnsOkStatusCode_AndEmptyListInitially()
+        public async Task GetCampaigns_ReturnsOkStatusCode_AndCampaignsList()
         {
             // Act
             var response = await _client.GetAsync("/api/campaigns");
@@ -29,7 +29,7 @@ namespace DonationFraud.Tests.Controllers
 
             var content = await response.Content.ReadAsStringAsync();
             Assert.NotNull(content);
-            Assert.Equal("[]", content); // Assuming db is empty initially
+            Assert.Contains("Save the Amazon Rainforest", content);
         }
 
         [Fact]

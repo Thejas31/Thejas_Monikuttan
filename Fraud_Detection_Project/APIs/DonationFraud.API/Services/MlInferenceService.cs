@@ -119,9 +119,7 @@ namespace DonationFraud.API.Services
             // Amount Ratio comparison
             var averageDonation = await _dbContext.Donations
                 .Where(d => d.CampaignId == donation.CampaignId)
-                .Select(d => (double)d.Amount)
-                .DefaultIfEmpty(0.0)
-                .AverageAsync();
+                .AverageAsync(d => (double?)d.Amount) ?? 0.0;
 
             var amountRatio = averageDonation > 0 ? (double)donation.Amount / averageDonation : 1.0;
 
