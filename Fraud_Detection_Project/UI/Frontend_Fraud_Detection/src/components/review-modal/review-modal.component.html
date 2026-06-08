@@ -73,6 +73,14 @@
         </div>
       </div>
 
+      <!-- Model Version -->
+      <div *ngIf="alert.modelVersion" class="bg-slate-800/50 rounded-xl p-3 flex justify-between items-center">
+        <span class="text-slate-400 text-xs">Prediction Model</span>
+        <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold border bg-primary/10 text-primary border-primary/30 font-mono">
+          {{ alert.modelVersion }}
+        </span>
+      </div>
+
       <!-- Reason -->
       <div class="bg-slate-800/50 rounded-xl p-3">
         <p class="text-slate-400 text-xs mb-1">Fraud Reason</p>

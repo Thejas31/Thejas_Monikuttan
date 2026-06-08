@@ -221,16 +221,20 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
           this.donation.message = '';
           this.selectedCampaign = null;
 
-          this.showToast('Donation made successfully!', 'success');
+          const modelSuffix = result.modelVersion ? ` (${result.modelVersion})` : '';
+          this.showToast(`Donation made successfully!${modelSuffix}`, 'success');
 
           // Instantly reload all data to update campaign progress and history
           this.loadAllDataSilently();
         }
       },
-      error: () => {
+      error: (err) => {
         this.isSubmitting = false;
         this.showConfirmModal = false;
-        this.showToast('Donation failed. Please try again.', 'error');
+        
+        const errMsg = err.error?.reason || 'Donation failed. Please try again.';
+        const modelSuffix = err.error?.modelVersion ? ` (${err.error.modelVersion})` : '';
+        this.showToast(`${errMsg}${modelSuffix}`, 'error');
       }
     });
   }

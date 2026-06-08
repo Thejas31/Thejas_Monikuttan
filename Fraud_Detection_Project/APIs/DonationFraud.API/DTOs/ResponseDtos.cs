@@ -67,6 +67,7 @@ namespace DonationFraud.API.DTOs
         public string IpAddress { get; set; } = string.Empty;
         public string Country { get; set; } = string.Empty;
         public string PaymentMethod { get; set; } = string.Empty;
+        public string ModelVersion { get; set; } = string.Empty;
     }
 
     // ====== User Summary DTO (for embedding in other responses) ======

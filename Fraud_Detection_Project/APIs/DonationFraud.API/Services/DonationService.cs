@@ -111,9 +111,19 @@ namespace DonationFraud.API.Services
             // Delegate fraud check to the FraudDetectionService
             bool isHighRisk = await _fraudDetectionService.EvaluateAndFlagDonationAsync(donation, request.UserId);
 
+            // Fetch the model version recorded for this donation
+            var mlPred = await _context.MlPredictions
+                .FirstOrDefaultAsync(p => p.DonationId == donation.Id);
+            string modelVersion = mlPred?.ModelVersion ?? "Mock_v1-rules";
+
             if (isHighRisk)
             {
-                return new ProcessDonationResult { IsSuccess = false, Reason = "Transaction blocked due to high fraud risk." };
+                return new ProcessDonationResult 
+                { 
+                    IsSuccess = false, 
+                    Reason = "Transaction blocked due to high fraud risk.",
+                    ModelVersion = modelVersion
+                };
             }
 
             // Recalculate total raised and auto-deactivate if target is met
@@ -142,7 +152,12 @@ namespace DonationFraud.API.Services
                 }
             }
 
-            return new ProcessDonationResult { IsSuccess = true, DonationId = donation.Id };
+            return new ProcessDonationResult 
+            { 
+                IsSuccess = true, 
+                DonationId = donation.Id,
+                ModelVersion = modelVersion
+            };
         }
 
         public async Task<IEnumerable<DonationResponseDto>> GetUserDonationsAsync(int userId)

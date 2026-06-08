@@ -11,6 +11,7 @@ export interface AlertDTO {
   paymentMethod: string;
   ipAddress: string;
   country: string;
+  modelVersion?: string;
   notes?: string;
 }
 

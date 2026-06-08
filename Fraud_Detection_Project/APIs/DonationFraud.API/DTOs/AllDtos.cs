@@ -48,6 +48,7 @@ namespace DonationFraud.API.Models
         public bool IsSuccess { get; set; }
         public int? DonationId { get; set; }
         public string Reason { get; set; } = string.Empty;
+        public string ModelVersion { get; set; } = string.Empty;
     }
 
     public class MlPredictionResult

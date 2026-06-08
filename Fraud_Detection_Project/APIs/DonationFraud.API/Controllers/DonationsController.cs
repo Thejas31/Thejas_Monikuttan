@@ -29,10 +29,10 @@ namespace DonationFraud.API.Controllers
 
             if (!result.IsSuccess)
             {
-                return BadRequest(new { Message = "Donation flagged or failed.", Reason = result.Reason });
+                return BadRequest(new { Message = "Donation flagged or failed.", Reason = result.Reason, ModelVersion = result.ModelVersion });
             }
 
-            return Ok(new { Message = "Donation successful.", DonationId = result.DonationId });
+            return Ok(new { Message = "Donation successful.", DonationId = result.DonationId, ModelVersion = result.ModelVersion });
         }
 
         [HttpGet("user/{userId}")]

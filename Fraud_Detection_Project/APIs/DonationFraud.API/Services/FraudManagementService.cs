@@ -26,13 +26,31 @@ namespace DonationFraud.API.Services
         public async Task<IEnumerable<FraudAlertResponseDto>> GetAllAlertsAsync()
         {
             var flags = await _fraudRepo.GetAllFlagsAsync();
-            return flags.Select(MapToDto);
+            var donationIds = flags.Select(f => f.DonationId).ToList();
+            var predictions = await _context.MlPredictions
+                .Where(p => donationIds.Contains(p.DonationId))
+                .ToDictionaryAsync(p => p.DonationId, p => p.ModelVersion);
+
+            return flags.Select(f => {
+                var dto = MapToDto(f);
+                dto.ModelVersion = predictions.TryGetValue(f.DonationId, out var version) ? version : "Mock_v1-rules";
+                return dto;
+            });
         }
 
         public async Task<IEnumerable<FraudAlertResponseDto>> GetHighRiskAlertsAsync()
         {
             var flags = await _fraudRepo.GetHighRiskFlagsAsync();
-            return flags.Select(MapToDto);
+            var donationIds = flags.Select(f => f.DonationId).ToList();
+            var predictions = await _context.MlPredictions
+                .Where(p => donationIds.Contains(p.DonationId))
+                .ToDictionaryAsync(p => p.DonationId, p => p.ModelVersion);
+
+            return flags.Select(f => {
+                var dto = MapToDto(f);
+                dto.ModelVersion = predictions.TryGetValue(f.DonationId, out var version) ? version : "Mock_v1-rules";
+                return dto;
+            });
         }
 
         public async Task<bool> ReviewAlertAsync(int flagId, bool isApproved, string notes, int adminUserId)

@@ -33,7 +33,7 @@ export class DonationService {
     return this.http.post<any>(`${environment.apiUrl}/campaigns`, campaign);
   }
 
-  submitDonation(donation: DonationDTO): Observable<{success: boolean, message: string}> {
+  submitDonation(donation: DonationDTO): Observable<{success: boolean, message: string, modelVersion?: string}> {
     const backendDto = {
       campaignId: parseInt(donation.campaignId, 10),
       amount: donation.amount
@@ -42,7 +42,8 @@ export class DonationService {
     return this.http.post<any>(`${environment.apiUrl}/donations`, backendDto).pipe(
       map(response => ({
         success: true,
-        message: response.message || 'Donation processed securely'
+        message: response.message || 'Donation processed securely',
+        modelVersion: response.modelVersion
       }))
     );
   }

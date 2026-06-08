@@ -40,7 +40,8 @@ export class FraudService {
           date: f.donationTimestamp ? new Date(f.donationTimestamp).toLocaleString() : new Date(f.createdAt).toLocaleString(),
           paymentMethod: f.paymentMethod || 'Unknown',
           ipAddress: f.ipAddress || 'Unknown',
-          country: f.country || 'Unknown'
+          country: f.country || 'Unknown',
+          modelVersion: f.modelVersion || 'Mock_v1-rules'
         }));
       }),
       catchError(err => {
